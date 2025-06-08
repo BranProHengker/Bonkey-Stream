@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import { Montserrat} from "next/font/google";
 import "./globals.css";
 
+
+
 const montserrat = Montserrat({
   weight: '400',
   subsets: ['latin'],
 })
 
 export const metadata: Metadata = {
-  title: "Bonkey Stream",
+  title: "Dabes Anime",
   description: "Si Paling Wibu",
 };
 

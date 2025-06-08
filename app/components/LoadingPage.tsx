@@ -7,7 +7,7 @@ export default function LoadingPage() {
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-gray-900 z-50">
       {/* Typing Animation */}
       <p className="text-xl sm:text-2xl font-bold text-gray-300 animate-typing overflow-hidden whitespace-nowrap border-r-4 border-gray-300 pr-2">
-        Please Wait A Second.....
+        Please Wait a Second.....
       </p>
 
       {/* Pulsating Dots */}

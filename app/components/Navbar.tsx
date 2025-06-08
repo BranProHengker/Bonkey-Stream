@@ -37,13 +37,15 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-      <nav className="bg-blue-600 py-4">
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      <nav className="fixed top-0 left-0 w-full z-50 py-3 backdrop-filter backdrop-blur-lg bg-opacity-20 bg-black shadow-md">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
           {/* Logo */}
           <a href="/home">
-          <h1 className="hover:text-blue-400 text-xl sm:text-2xl font-bold mb-4 sm:mb-0">
-            Bonkey Stream
-            </h1></a>
+            <h1 className="hover:text-blue-400 text-xl sm:text-2xl font-bold mb-4 sm:mb-0 text-white">
+              Bonkey Stream
+            </h1>
+          </a>
 
           {/* Menu Navigasi */}
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
@@ -100,9 +102,14 @@ export default function Navbar() {
               <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
                 <input
                   type="text"
-                  placeholder="Cari anime..."
+                  placeholder="Search any anime..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(); // Panggil fungsi pencarian saat Enter ditekan
+                    }
+                  }}
                   className="px-3 py-1 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
                 />
                 <button
@@ -121,7 +128,7 @@ export default function Navbar() {
       {isSearchVisible && query && (
         <section className="py-8 sm:py-12 bg-gray-900">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Hasil Pencarian</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Result what your looking for</h2>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="flex justify-center items-center space-x-2">
@@ -129,7 +136,7 @@ export default function Navbar() {
                   <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-150"></div>
                   <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-300"></div>
                 </div>
-                <p className="mt-4 text-gray-400">Memuat hasil...</p>
+                <p className="mt-4 text-gray-400">Wait A Second....</p>
               </div>
             ) : searchResults.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -151,7 +158,7 @@ export default function Navbar() {
                 ))}
               </div>
             ) : (
-              <p className="text-lg text-gray-400">Tidak ada hasil ditemukan.</p>
+              <p className="text-lg text-gray-400"> It's nothing Anime what your looking for .</p>
             )}
           </div>
         </section>

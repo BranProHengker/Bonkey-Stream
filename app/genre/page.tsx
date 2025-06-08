@@ -75,20 +75,20 @@ export default function GenrePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-72 sm:h-96 overflow-hidden">
+      <section className="relative h-70 sm:h-100 overflow-hidden">
         <Image
-          src="https://i.pinimg.com/736x/a1/36/dc/a136dcbc249237d7b643aa5fc03a7e7e.jpg" // Ganti dengan URL gambar hero online
-          alt="Hero Anime"
+          src="/my-ojob3.jpg" // Ganti dengan URL gambar hero online
+          alt="Nakano Itsuki"
           fill
           style={{ objectFit: 'cover' }}
-          className="opacity-70"
+          className="opacity-65"
         />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-            Choose Genre
+          Choose The Genre
           </h2>
           <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Find Your Anime With Genre What You Like
+           Just enjoy the display of this anime streaming website which doesn't stream just data on amine.
           </p>
         </div>
       </section>
@@ -96,7 +96,7 @@ export default function GenrePage() {
       {/* Genre List Section */}
       <section className="py-8 sm:py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Daftar Genre</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">List Genre</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {genres.map((genre) => (
               <button
@@ -117,7 +117,7 @@ export default function GenrePage() {
       {selectedGenre && (
         <section className="py-8 sm:py-12">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">Anime Berdasarkan Genre</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6">Based On Genre</h2>
             {animeByGenre.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {animeByGenre.map((anime) => (
@@ -141,7 +141,7 @@ export default function GenrePage() {
               </div>
             ) : (
               <p className="text-lg text-gray-400 text-center">
-                Tidak ada anime ditemukan untuk genre ini.
+                It's nothing Anime what your looking for .
               </p>
             )}
           </div>

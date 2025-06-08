@@ -60,20 +60,20 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-72 sm:h-96 overflow-hidden">
+      <section className="relative h-70 sm:h-100 overflow-hidden">
         <Image
-          src="https://i.pinimg.com/736x/a1/36/dc/a136dcbc249237d7b643aa5fc03a7e7e.jpg" // Ganti dengan URL gambar hero online
-          alt="Hero Anime"
+          src="/my-ojob2.jpg" // Ganti dengan URL gambar hero online
+          alt="Nakano Itsuki"
           fill
           style={{ objectFit: 'cover' }}
-          className="opacity-70"
+          className="opacity-65"
         />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
             Popular Anime Right Now
           </h2>
           <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Just enjoy the display of this anime streaming website which doesn't stream just displays it.
+            Just enjoy the display of this anime streaming website which doesn't stream just data on amine.
           </p>
         </div>
       </section>
