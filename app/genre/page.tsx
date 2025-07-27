@@ -77,7 +77,7 @@ export default function GenrePage() {
       {/* Hero Section */}
       <section className="relative h-70 sm:h-100 overflow-hidden">
         <Image
-          src="/my-ojob3.jpg" // Ganti dengan URL gambar hero online
+          src="/go-toubun-no-hanayome.jpg" // Ganti dengan URL gambar hero online
           alt="Nakano Itsuki"
           fill
           style={{ objectFit: 'cover' }}

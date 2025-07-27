@@ -68,7 +68,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-70 sm:h-100 overflow-hidden">
         <Image
-          src="/my-ojob.jpg" // Ganti dengan URL gambar hero online
+          src="/my-kanojo-2.jpg" // Ganti dengan URL gambar hero online
           alt="Nakano Itsuki"
           fill
           style={{ objectFit: 'cover' }}

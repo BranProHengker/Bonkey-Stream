@@ -1,5 +1,6 @@
 'use client'; // Karena menggunakan useState
 import { useState } from 'react';
+import Image from 'next/image'; // Import Image dari Next.js
 
 export default function Navbar() {
   const [query, setQuery] = useState(''); // State untuk menyimpan kata kunci pencarian
@@ -37,11 +38,19 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-        <link rel="icon" type="image/png" href="/favicon.png" />
       <nav className="fixed top-0 left-0 w-full z-50 py-3 backdrop-filter backdrop-blur-lg bg-opacity-20 bg-black shadow-md">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
           {/* Logo */}
-          <a href="/home">
+          <a href="/home" className="flex items-center space-x-2">
+            {/* Gambar Logo */}
+            <Image
+              src="/favicon.png" // Path ke gambar di folder public
+              alt="Bonkey Stream Logo"
+              width={40} // Lebar gambar
+              height={40} // Tinggi gambar
+              className="rounded-full" // Opsional: Memberikan efek bulat pada logo
+            />
+            {/* Tulisan Bonkey Stream */}
             <h1 className="hover:text-blue-400 text-xl sm:text-2xl font-bold mb-4 sm:mb-0 text-white">
               Bonkey Stream
             </h1>
