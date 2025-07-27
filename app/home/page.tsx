@@ -157,7 +157,7 @@ export default function HomePage() {
                   <span className="font-bold">—</span> {selectedAnime.id}
                 </p>
                 <p>
-                  <span className="font-bold">Description:</span> Just Example
+                  <span className="font-bold">Description:</span> Just Example.
                 </p>
               </div>
             </div>
