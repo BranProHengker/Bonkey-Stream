@@ -59,7 +59,7 @@ export default function Navbar() {
                   Bonkey Stream
                 </h1>
                 <span className="hidden sm:inline-flex text-xs bg-blue-500/20 text-blue-200 border border-blue-500/30 px-2 py-1 rounded-full">
-                  Pro
+                  WIBU
                 </span>
               </div>
             </a>
