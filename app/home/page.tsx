@@ -295,9 +295,7 @@ export default function HomePage() {
                       src={
                         selectedAnime.images?.jpg?.large_image_url ||
                         selectedAnime.images?.jpg?.image_url ||
-                        "/placeholder.svg" ||
-                        "/placeholder.svg" ||
-                        "/placeholder.svg" ||
+                        "/placeholder.svg?height=400&width=300" ||
                         "/placeholder.svg"
                       }
                       alt={selectedAnime.title}

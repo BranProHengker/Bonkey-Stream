@@ -65,35 +65,22 @@ export default function Navbar() {
             </a>
 
             <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="/home"
-                className="text-sm font-medium text-white hover:text-blue-400 transition-all duration-300 relative group"
-              >
+              <a href="/home" className="text-white hover:text-blue-400 font-medium transition-colors duration-300">
                 Home
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
               </a>
-              <a
-                href="/genre"
-                className="text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 relative group"
-              >
+              <a href="/genre" className="text-slate-300 hover:text-white font-medium transition-colors duration-300">
                 Genre
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
               </a>
-              <a
-                href="/popular"
-                className="text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 relative group"
-              >
+              <a href="/popular" className="text-slate-300 hover:text-white font-medium transition-colors duration-300">
                 Popular
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
               </a>
               <a
                 href="https://github.com/BranProHengker"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 relative group flex items-center space-x-1"
+                className="text-slate-300 hover:text-white font-medium transition-colors duration-300"
               >
-                <span>About</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                About
               </a>
             </div>
 
@@ -101,24 +88,47 @@ export default function Navbar() {
               {!isSearchVisible ? (
                 <button
                   onClick={() => setIsSearchVisible(true)}
-                  className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all duration-300 rounded-md"
+                  className="flex items-center space-x-2 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all duration-300 rounded-md"
                 >
-                  Search
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  <span>Search</span>
                 </button>
               ) : (
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    placeholder="Search anime..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleSearch()
-                      }
-                    }}
-                    className="w-64 px-3 py-2 bg-slate-800/50 border border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md outline-none"
-                  />
+                  <div className="relative">
+                    <svg
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                    <input
+                      type="text"
+                      placeholder="Search anime..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSearch()
+                        }
+                      }}
+                      className="w-64 pl-10 pr-3 py-2 bg-slate-800/50 border border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md outline-none"
+                    />
+                  </div>
                   <button
                     onClick={handleSearch}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 disabled:opacity-50"
@@ -170,7 +180,7 @@ export default function Navbar() {
                   Popular
                 </a>
                 <a
-                  href="https://branprohengker.github.io/name-card-bran/ini.html"
+                  href="https://github.com/BranProHengker"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-300"
@@ -181,18 +191,33 @@ export default function Navbar() {
                 {/* Mobile Search */}
                 <div className="px-4 py-3 space-y-3">
                   <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      placeholder="Search anime..."
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleSearch()
-                        }
-                      }}
-                      className="flex-1 px-3 py-2 bg-slate-800/50 border border-slate-600 text-white placeholder:text-slate-400 rounded-md outline-none focus:border-blue-500"
-                    />
+                    <div className="relative flex-1">
+                      <svg
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                      <input
+                        type="text"
+                        placeholder="Search anime..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSearch()
+                          }
+                        }}
+                        className="w-full pl-10 pr-3 py-2 bg-slate-800/50 border border-slate-600 text-white placeholder:text-slate-400 rounded-md outline-none focus:border-blue-500"
+                      />
+                    </div>
                     <button
                       onClick={handleSearch}
                       className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 disabled:opacity-50"
