@@ -160,19 +160,51 @@ export default function GenrePage() {
                       style={{ objectFit: "cover" }}
                       className="transition-transform duration-500 group-hover:scale-110"
                     />
+
+                    {/* Genre badge in top-left */}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-md shadow-lg">
+                        {anime.genre}
+                      </span>
+                    </div>
+
+                    {/* Rating in top-right */}
+                    {anime.score && (
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="flex items-center bg-black/70 backdrop-blur-sm px-2 py-1 rounded-md">
+                          <span className="text-yellow-400 text-xs mr-1">★</span>
+                          <span className="text-white text-xs font-medium">{anime.score}</span>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
+
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors duration-300">
+                    <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors duration-300 mb-2">
                       {anime.title}
                     </h3>
-                    <span className="inline-block mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded-full">
-                      {anime.genre}
-                    </span>
-                    {anime.score && (
-                      <div className="mt-2 flex items-center">
-                        <span className="text-yellow-400 text-sm">★ {anime.score}</span>
+
+                    {/* Additional genre tags */}
+                    {anime.genres && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {anime.genres
+                          .split(", ")
+                          .slice(0, 3)
+                          .map((genre, index) => (
+                            <span key={index} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-md">
+                              {genre}
+                            </span>
+                          ))}
                       </div>
+                    )}
+
+                    {/* Episode info */}
+                    {anime.episodes && (
+                      <p className="text-gray-400 text-sm">
+                        {anime.episodes} episodes • {anime.type}
+                      </p>
                     )}
                   </div>
                 </div>

@@ -170,7 +170,7 @@ export default function Navbar() {
                   Popular
                 </a>
                 <a
-                  href="https://github.com/BranProHengker"
+                  href="https://branprohengker.github.io/name-card-bran/ini.html"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-300"

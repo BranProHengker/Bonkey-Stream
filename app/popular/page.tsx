@@ -84,23 +84,61 @@ export default function PopularPage() {
               <p className="mt-4 text-gray-400">Memuat anime populer...</p>
             </div>
           ) : popularAnime.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
               {popularAnime.map((anime) => (
                 <div
                   key={anime.mal_id}
-                  className="group relative rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   onClick={() => openModal(anime)}
                 >
-                  <Image
-                    src={anime.images.jpg.image_url || "/placeholder.svg"}
-                    alt={anime.title}
-                    width={300}
-                    height={450}
-                    className="w-full h-100 object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 sm:p-4">
-                    <h3 className="text-sm sm:text-lg font-semibold text-white">{anime.title}</h3>
-                    <p className="text-xs text-gray-300 mt-1">Score: {anime.score || "N/A"}</p>
+                  <div className="relative">
+                    <Image
+                      src={anime.images.jpg.image_url || "/placeholder.svg"}
+                      alt={anime.title}
+                      width={300}
+                      height={400}
+                      className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+
+                    {/* Genre badge in top-left */}
+                    {anime.genres && anime.genres.length > 0 && (
+                      <div className="absolute top-2 left-2">
+                        <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
+                          {anime.genres[0].name}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Rating in top-right */}
+                    {anime.score && (
+                      <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
+                        <span className="text-yellow-400 text-sm mr-1">★</span>
+                        <span className="text-white text-sm font-medium">{anime.score}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Title and additional info below image */}
+                  <div className="p-3">
+                    <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-200">
+                      {anime.title}
+                    </h3>
+
+                    {/* Additional genre tags */}
+                    {anime.genres && anime.genres.length > 1 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {anime.genres.slice(1, 3).map((genre) => (
+                          <span key={genre.mal_id} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
+                            {genre.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center text-xs text-gray-400">
+                      <span>{anime.type}</span>
+                      <span>{anime.episodes ? `${anime.episodes} eps` : "Ongoing"}</span>
+                    </div>
                   </div>
                 </div>
               ))}
