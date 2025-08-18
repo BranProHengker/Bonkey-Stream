@@ -106,7 +106,7 @@ export default function GenrePage() {
       <Navbar />
 
       <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
-        <Image src="/my-kanojo-2.jpg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-60" />
+        <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">Anime by Genre</h2>
