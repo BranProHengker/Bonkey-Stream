@@ -13,7 +13,8 @@ export default function WelcomePage() {
           {/* Left Column - Content */}
           <div className="flex-1 space-y-6 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 animate-typing">
-              Welcome to Web <span className="text-blue-600">Dabes Anime</span>
+              Welcome to Web <span className="text-blue-600">Dabes Anime
+                <br></br>(Bonkey Stream)</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600">
               And this is my first Website using Next JS and skipping React.<br></br> I know me so Stupid but I want to use this.<br></br>

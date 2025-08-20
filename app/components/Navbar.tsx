@@ -13,6 +13,7 @@ export default function Navbar() {
 
   const handleSearch = async () => {
     if (!query.trim()) return
+    setIsSearchVisible(true)
     setLoading(true)
     try {
       const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}`)
@@ -73,6 +74,12 @@ export default function Navbar() {
               </a>
               <a href="/popular" className="text-slate-300 hover:text-white font-medium transition-colors duration-300">
                 Popular
+              </a>
+              <a
+                href="/upcoming"
+                className="text-slate-300 hover:text-white font-medium transition-colors duration-300"
+              >
+                Upcoming
               </a>
               <a
                 href="https://github.com/BranProHengker"
@@ -178,6 +185,12 @@ export default function Navbar() {
                   className="block px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-300"
                 >
                   Popular
+                </a>
+                <a
+                  href="/upcoming"
+                  className="block px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-300"
+                >
+                  Upcoming
                 </a>
                 <a
                   href="https://github.com/BranProHengker"
