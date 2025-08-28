@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 
 export default function Navbar() {
@@ -10,6 +10,27 @@ export default function Navbar() {
   const [isSearchVisible, setIsSearchVisible] = useState(false)
   const [selectedAnime, setSelectedAnime] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+
+      if (currentScrollY < 10) {
+        setIsNavbarVisible(true)
+      } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setIsNavbarVisible(false)
+      } else if (currentScrollY < lastScrollY.current) {
+        setIsNavbarVisible(true)
+      }
+
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleSearch = async () => {
     if (!query.trim()) return
@@ -41,7 +62,11 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border-b border-slate-700/50 shadow-2xl">
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl border-b border-slate-700/50 shadow-2xl transition-transform duration-300 ease-in-out ${
+          isNavbarVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <a href="/home" className="flex items-center space-x-3 group">
@@ -201,7 +226,6 @@ export default function Navbar() {
                   About
                 </a>
 
-                {/* Mobile Search */}
                 <div className="px-4 py-3 space-y-3">
                   <div className="flex items-center space-x-2">
                     <div className="relative flex-1">
@@ -329,7 +353,6 @@ export default function Navbar() {
               </button>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-                {/* Poster */}
                 <div className="flex justify-center">
                   <div className="relative">
                     <img
@@ -345,7 +368,6 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                {/* Information */}
                 <div className="space-y-6 overflow-y-auto max-h-[500px]">
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-2">{selectedAnime.title}</h2>
