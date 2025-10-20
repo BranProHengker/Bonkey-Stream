@@ -3,14 +3,46 @@
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 
+// Definisikan tipe data untuk anime
+interface AnimeGenre {
+  mal_id: number
+  name: string
+}
+
+interface AnimeImages {
+  jpg: {
+    image_url: string
+    large_image_url: string
+  }
+}
+
+interface AnimeAired {
+  string: string
+}
+
+interface Anime {
+  mal_id: number
+  title: string
+  title_english?: string
+  images: AnimeImages
+  synopsis: string
+  type: string
+  episodes: number | null
+  status: string
+  score: number | null
+  rating: string
+  genres: AnimeGenre[]
+  aired: AnimeAired
+}
+
 export default function Navbar() {
-  const [query, setQuery] = useState("")
-  const [searchResults, setSearchResults] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [isSearchVisible, setIsSearchVisible] = useState(false)
-  const [selectedAnime, setSelectedAnime] = useState(null)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true)
+  const [query, setQuery] = useState<string>("")
+  const [searchResults, setSearchResults] = useState<Anime[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false)
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+  const [isNavbarVisible, setIsNavbarVisible] = useState<boolean>(true)
   const lastScrollY = useRef(0)
 
   useEffect(() => {
@@ -38,6 +70,9 @@ export default function Navbar() {
     setLoading(true)
     try {
       const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}`)
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
       const data = await response.json()
       setSearchResults(data.data || [])
     } catch (error) {
@@ -48,7 +83,7 @@ export default function Navbar() {
     }
   }
 
-  const openModal = (anime) => {
+  const openModal = (anime: Anime) => {
     setSelectedAnime(anime)
   }
 
@@ -341,6 +376,10 @@ export default function Navbar() {
         </section>
       )}
 
+      {/* Ganti modal manual dengan AnimeModal jika kamu ingin memanggilnya dari sini */}
+      {/* <AnimeModal anime={selectedAnime} onClose={closeModal} /> */}
+      
+      {/* Atau tetap gunakan modal inline jika ingin tetap di sini */}
       {selectedAnime && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="bg-slate-900 border border-slate-700 w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-lg">
