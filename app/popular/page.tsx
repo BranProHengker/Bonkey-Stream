@@ -2,21 +2,42 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
-import AnimeModal from "@/app/components/AnimeModal" // Import komponen baru
-import Image from "next/image"
+import AnimeModal from "@/app/components/AnimeModal" // Import AnimeModal
 import { useState, useEffect } from "react"
+import Image from "next/image"
+
+// ✅ Impor tipe Anime dari file types
+import { Anime } from "@/app/types/anime";
 
 export default function PopularPage() {
-  const [popularAnime, setPopularAnime] = useState([])
+  const [popularAnime, setPopularAnime] = useState<Anime[]>([]) // ✅ Pastikan tipe ini Anime[]
   const [loadingPopular, setLoadingPopular] = useState(true)
-  const [selectedAnime, setSelectedAnime] = useState(null)
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null) // ✅ Pastikan tipe ini Anime | null
 
   const fetchPopularAnime = async () => {
     setLoadingPopular(true)
     try {
-      const response = await fetch("https://api.jikan.moe/v4/top/anime")
+      // ✅ Tambahkan `as const` atau `as Anime[]` jika diperlukan
+      const response = await fetch("https://api.jikan.moe/v4/top/anime") // Hapus spasi di akhir URL
       const data = await response.json()
-      setPopularAnime(data.data || [])
+
+      // ✅ Pastikan data disesuaikan dengan tipe Anime
+      const formattedAnime = data.data?.map((a: any) => ({
+        mal_id: a.mal_id,
+        title: a.title,
+        title_english: a.title_english,
+        images: a.images,
+        synopsis: a.synopsis,
+        type: a.type,
+        episodes: a.episodes,
+        status: a.status,
+        score: a.score,
+        rating: a.rating || "Unknown",
+        genres: a.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
+        aired: a.aired || { string: "Unknown" },
+      })) as Anime[] || []
+
+      setPopularAnime(formattedAnime)
     } catch (error) {
       console.error("Error fetching popular anime:", error)
       setPopularAnime([])
@@ -42,7 +63,8 @@ export default function PopularPage() {
     return <LoadingPage />
   }
 
-  const openModal = (anime) => {
+  // ✅ Tambahkan tipe parameter 'anime' di sini
+  const openModal = (anime: Anime) => {
     setSelectedAnime(anime)
   }
 
@@ -150,7 +172,7 @@ export default function PopularPage() {
         </div>
       </section>
 
-      {/* Modal Ditampilkan di sini */}
+      {/* ✅ AnimeModal sekarang menerima tipe Anime yang benar */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />

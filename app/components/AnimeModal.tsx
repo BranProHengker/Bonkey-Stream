@@ -1,5 +1,36 @@
-import { Anime } from "@/app/types/anime"; // Pastikan tipe Anime sudah didefinisikan
 import Image from "next/image";
+
+// Definisikan tipe langsung di sini
+interface AnimeGenre {
+  mal_id: number;
+  name: string;
+}
+
+interface AnimeImages {
+  jpg: {
+    image_url: string;
+    large_image_url: string;
+  };
+}
+
+interface AnimeAired {
+  string: string;
+}
+
+interface Anime {
+  mal_id: number;
+  title: string;
+  title_english?: string;
+  images: AnimeImages;
+  synopsis: string;
+  type: string;
+  episodes: number | null;
+  status: string;
+  score: number | null;
+  rating: string;
+  genres: AnimeGenre[];
+  aired: AnimeAired;
+}
 
 interface AnimeModalProps {
   anime: Anime | null;
@@ -42,6 +73,10 @@ export default function AnimeModal({ anime, onClose }: AnimeModalProps) {
           <div className="space-y-4">
             <h2 className="text-2xl sm:text-3xl font-bold text-white">{anime.title}</h2>
 
+            {anime.title_english && anime.title_english !== anime.title && (
+              <p className="text-slate-400">{anime.title_english}</p>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-bold text-blue-400">Type:</span>
@@ -60,8 +95,8 @@ export default function AnimeModal({ anime, onClose }: AnimeModalProps) {
                 <span className="ml-2 text-gray-300">{anime.score || "N/A"}</span>
               </div>
               <div>
-                <span className="font-bold text-blue-400">Year:</span>
-                <span className="ml-2 text-gray-300">{anime.year || "Unknown"}</span>
+                <span className="font-bold text-blue-400">Aired:</span>
+                <span className="ml-2 text-gray-300">{anime.aired?.string || "Unknown"}</span>
               </div>
               <div>
                 <span className="font-bold text-blue-400">Rating:</span>

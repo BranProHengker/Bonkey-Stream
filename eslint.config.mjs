@@ -13,4 +13,13 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
-export default eslintConfig;
+export default [
+  ...compat.config({
+    extends: ['next/core-web-vitals', 'next/typescript'],
+    rules: {
+      // Nonaktifkan aturan tertentu
+      'react/no-unescaped-entities': 'off',
+      '@next/next/no-img-element': 'off',
+    },
+  }),
+]

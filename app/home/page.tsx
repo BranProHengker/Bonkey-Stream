@@ -3,34 +3,12 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
-import AnimeModal from "@/app/components/AnimeModal" // Import komponen AnimeModal
+import AnimeModal from "@/app/components/AnimeModal" // Pastikan import ini benar
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-interface AnimeGenre {
-  mal_id: number
-  name: string
-}
-
-interface AnimeImages {
-  jpg: {
-    image_url: string
-    large_image_url: string
-  }
-}
-
-interface Anime {
-  mal_id: number
-  title: string
-  images: AnimeImages
-  synopsis: string
-  type: string
-  episodes: number | null
-  status: string
-  score: number | null
-  year: number | null
-  genres: AnimeGenre[]
-}
+// Impor tipe Anime dari file types
+import { Anime } from "@/app/types/anime";
 
 export default function HomePage() {
   const [query, setQuery] = useState("")
@@ -66,7 +44,22 @@ export default function HomePage() {
 
             if (data && data.data && data.data.length > 0) {
               console.log(`[v0] Successfully found: ${data.data[0].title}`)
-              return data.data[0]
+              // ✅ Pastikan struktur objek sesuai dengan tipe Anime
+              const anime = data.data[0];
+              return {
+                mal_id: anime.mal_id,
+                title: anime.title,
+                title_english: anime.title_english,
+                images: anime.images,
+                synopsis: anime.synopsis,
+                type: anime.type,
+                episodes: anime.episodes,
+                status: anime.status,
+                score: anime.score,
+                rating: anime.rating || "Unknown", // ✅ Tambahkan rating
+                genres: anime.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
+                aired: anime.aired || { string: "Unknown" }, // ✅ Tambahkan aired
+              } as Anime;
             } else {
               console.error(`[v0] No results found for ${name}`)
               return null
@@ -82,10 +75,12 @@ export default function HomePage() {
 
         if (validResults.length === 0) {
           console.warn("[v0] No anime found from API, using fallback data")
+          // ✅ Pastikan fallback data juga sesuai tipe Anime
           const fallbackData: Anime[] = [
             {
               mal_id: 1,
               title: "Berserk",
+              title_english: "Berserk",
               images: {
                 jpg: {
                   image_url: "/placeholder.svg?height=400&width=300",
@@ -97,36 +92,39 @@ export default function HomePage() {
               episodes: 25,
               status: "Finished Airing",
               score: 8.7,
-              year: 1997,
+              rating: "R - 17+ (violence & profanity)", // ✅ Tambahkan rating
               genres: [
                 { mal_id: 1, name: "Action" },
                 { mal_id: 2, name: "Drama" },
               ],
+              aired: { string: "1997" }, // ✅ Tambahkan aired
             },
             {
               mal_id: 2,
               title: "Josee to Tora to Sakana-tachi",
+              title_english: "Josee, the Tiger and the Fish",
               images: {
                 jpg: {
                   image_url: "/placeholder.svg?height=400&width=300",
                   large_image_url: "/placeholder.svg?height=400&width=300",
                 },
               },
-              synopsis:
-                "A heartwarming story about a disabled girl named Josee and a university student who helps her explore the world.",
+              synopsis: "A heartwarming story about a disabled girl named Josee and a university student who helps her explore the world.",
               type: "Movie",
               episodes: 1,
               status: "Finished Airing",
               score: 8.2,
-              year: 2020,
+              rating: "PG-13", // ✅ Tambahkan rating
               genres: [
                 { mal_id: 8, name: "Romance" },
                 { mal_id: 9, name: "Drama" },
               ],
+              aired: { string: "2020" }, // ✅ Tambahkan aired
             },
             {
               mal_id: 3,
               title: "Koe no Katachi",
+              title_english: "A Silent Voice",
               images: {
                 jpg: {
                   image_url: "/placeholder.svg?height=400&width=300",
@@ -138,15 +136,17 @@ export default function HomePage() {
               episodes: 1,
               status: "Finished Airing",
               score: 8.9,
-              year: 2016,
+              rating: "PG-13", // ✅ Tambahkan rating
               genres: [
                 { mal_id: 5, name: "Drama" },
                 { mal_id: 6, name: "School" },
               ],
+              aired: { string: "2016" }, // ✅ Tambahkan aired
             },
             {
               mal_id: 4,
               title: "JoJo no Kimyou na Bouken",
+              title_english: "JoJo's Bizarre Adventure",
               images: {
                 jpg: {
                   image_url: "/placeholder.svg?height=400&width=300",
@@ -158,11 +158,12 @@ export default function HomePage() {
               episodes: 26,
               status: "Finished Airing",
               score: 8.5,
-              year: 2012,
+              rating: "PG-13", // ✅ Tambahkan rating
               genres: [
                 { mal_id: 7, name: "Action" },
                 { mal_id: 8, name: "Adventure" },
               ],
+              aired: { string: "2012" }, // ✅ Tambahkan aired
             },
           ]
           setRecommendedAnime(fallbackData)
@@ -276,7 +277,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Ganti bagian modal dengan komponen AnimeModal */}
+      {/* ✅ AnimeModal sekarang menerima tipe Anime yang benar */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />
