@@ -3,13 +3,49 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
+import AnimeModal from "@/app/components/AnimeModal" // Import AnimeModal
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
+// Definisikan tipe data untuk anime dan genre
+interface AnimeGenre {
+  mal_id: number
+  name: string
+}
+
+interface AnimeImages {
+  jpg: {
+    image_url: string
+    large_image_url: string
+  }
+}
+
+interface AnimeAired {
+  string: string
+}
+
+interface Anime {
+  id: number
+  title: string
+  images: AnimeImages
+  genre: string
+  type: string
+  episodes: number | null
+  status: string
+  aired: string
+  score: number | null
+  synopsis: string
+  genres: AnimeGenre[] // <-- Ini sekarang ARRAY, bukan string!
+}
+
+interface GenreAnime {
+  [key: string]: Anime[]
+}
+
 export default function GenrePage() {
-  const [selectedAnime, setSelectedAnime] = useState(null)
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
   const [selectedGenre, setSelectedGenre] = useState("Action")
-  const [genreAnime, setGenreAnime] = useState({})
+  const [genreAnime, setGenreAnime] = useState<GenreAnime>({})
   const [isLoadingData, setIsLoadingData] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -57,17 +93,22 @@ export default function GenrePage() {
     Dementia: 5,
   }
 
-  const fetchAnimeByGenre = async (genreName, genreId) => {
+  const fetchAnimeByGenre = async (genreName: string, genreId: number) => {
     try {
       setIsLoadingData(true)
       const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&limit=8&order_by=score&sort=desc`)
       const data = await response.json()
 
       if (data.data) {
-        const formattedAnime = data.data.map((anime) => ({
+        const formattedAnime = data.data.map((anime: any) => ({
           id: anime.mal_id,
           title: anime.title,
-          image: anime.images.jpg.large_image_url,
+          images: {
+            jpg: {
+              large_image_url: anime.images.jpg.large_image_url,
+              image_url: anime.images.jpg.image_url,
+            },
+          },
           genre: genreName,
           type: anime.type,
           episodes: anime.episodes,
@@ -75,7 +116,7 @@ export default function GenrePage() {
           aired: anime.aired?.string,
           score: anime.score,
           synopsis: anime.synopsis,
-          genres: anime.genres?.map((g) => g.name).join(", "),
+          genres: anime.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [], // <-- Tetap array!
         }))
 
         setGenreAnime((prev) => ({
@@ -103,7 +144,7 @@ export default function GenrePage() {
     }
   }, [isLoading, selectedGenre])
 
-  const handleGenreChange = (genreName) => {
+  const handleGenreChange = (genreName: string) => {
     setSelectedGenre(genreName)
     if (!genreAnime[genreName]) {
       fetchAnimeByGenre(genreName, genres[genreName])
@@ -114,7 +155,7 @@ export default function GenrePage() {
     return <LoadingPage />
   }
 
-  const openModal = (anime) => {
+  const openModal = (anime: Anime) => {
     setSelectedAnime(anime)
   }
 
@@ -175,7 +216,7 @@ export default function GenrePage() {
                 >
                   <div className="relative">
                     <Image
-                      src={anime.image || "/placeholder.svg"}
+                      src={anime.images.jpg.image_url || "/placeholder.svg"}
                       alt={anime.title}
                       width={300}
                       height={400}
@@ -205,16 +246,13 @@ export default function GenrePage() {
                     </h3>
 
                     {/* Additional genre tags */}
-                    {anime.genres && (
+                    {anime.genres && anime.genres.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-2">
-                        {anime.genres
-                          .split(", ")
-                          .slice(1, 3)
-                          .map((genre, index) => (
-                            <span key={index} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-                              {genre}
-                            </span>
-                          ))}
+                        {anime.genres.slice(1, 3).map((genre) => (
+                          <span key={genre.mal_id} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
+                            {genre.name}
+                          </span>
+                        ))}
                       </div>
                     )}
 
@@ -230,84 +268,8 @@ export default function GenrePage() {
         </div>
       </section>
 
-      {selectedAnime && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-white hover:text-gray-400 z-10 bg-gray-800 rounded-full p-2 transition-colors duration-200"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex justify-center">
-                <Image
-                  src={selectedAnime.image || "/placeholder.svg"}
-                  alt={selectedAnime.title}
-                  width={300}
-                  height={400}
-                  className="rounded-lg shadow-lg max-w-full h-auto"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-2xl sm:text-3xl font-bold text-white">{selectedAnime.title}</h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-bold text-blue-400">Type:</span>
-                    <span className="ml-2 text-gray-300">{selectedAnime.type}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-blue-400">Episodes:</span>
-                    <span className="ml-2 text-gray-300">{selectedAnime.episodes || "Unknown"}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-blue-400">Status:</span>
-                    <span className="ml-2 text-gray-300">{selectedAnime.status}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-blue-400">Score:</span>
-                    <span className="ml-2 text-gray-300">{selectedAnime.score || "N/A"}</span>
-                  </div>
-                  <div>
-                    <span className="font-bold text-blue-400">Aired:</span>
-                    <span className="ml-2 text-gray-300">{selectedAnime.aired || "Unknown"}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="font-bold text-blue-400">Synopsis:</p>
-                  <div className="text-gray-300 text-sm leading-relaxed max-h-48 overflow-y-auto bg-gray-800 p-4 rounded-lg">
-                    {selectedAnime.synopsis || "No synopsis available"}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="font-bold text-blue-400">Genres:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedAnime.genres?.split(", ").map((genre, index) => (
-                      <span key={index} className="px-3 py-1 bg-blue-600 text-white text-xs rounded-full">
-                        {genre}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Ganti modal manual dengan komponen AnimeModal */}
+      <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />
     </div>

@@ -3,6 +3,7 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
+import AnimeModal from "@/app/components/AnimeModal" // Import komponen AnimeModal
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
@@ -275,84 +276,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {selectedAnime && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700">
-            <div className="relative">
-              <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors duration-200"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-                <div className="flex justify-center">
-                  <div className="relative aspect-[3/4] w-full max-w-sm">
-                    <Image
-                      src={
-                        selectedAnime.images?.jpg?.large_image_url ||
-                        selectedAnime.images?.jpg?.image_url ||
-                        "/placeholder.svg?height=400&width=300" ||
-                        "/placeholder.svg"
-                      }
-                      alt={selectedAnime.title}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      className="rounded-xl shadow-lg"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-4">{selectedAnime.title}</h2>
-                    <div className="space-y-2 text-gray-300">
-                      <p>
-                        <span className="font-bold">Type:</span> {selectedAnime.type}
-                      </p>
-                      <p>
-                        <span className="font-bold">Episodes:</span> {selectedAnime.episodes || "Unknown"}
-                      </p>
-                      <p>
-                        <span className="font-bold">Status:</span> {selectedAnime.status}
-                      </p>
-                      <p>
-                        <span className="font-bold">Score:</span> {selectedAnime.score || "N/A"}
-                      </p>
-                      <p>
-                        <span className="font-bold">Year:</span> {selectedAnime.year || "Unknown"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2 text-white">Synopsis</h3>
-                    <p className="text-gray-300 leading-relaxed">
-                      {selectedAnime.synopsis || "No synopsis available."}
-                    </p>
-                  </div>
-
-                  {selectedAnime.genres && selectedAnime.genres.length > 0 && (
-                    <div>
-                      <h3 className="font-semibold text-lg mb-2 text-white">Genres</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedAnime.genres.map((genre) => (
-                          <span key={genre.mal_id} className="px-3 py-1 bg-blue-600 text-white text-sm rounded-full">
-                            {genre.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Ganti bagian modal dengan komponen AnimeModal */}
+      <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />
     </div>
