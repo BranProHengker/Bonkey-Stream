@@ -24,7 +24,11 @@ export default function UpcomingPage() {
         ...anime,
         // Ensure aired prop structure consistency if needed, mostly Jikan returns it well
       }))
-      setUpcomingAnime(formattedData)
+      
+      // Deduplicate anime based on mal_id
+      const uniqueAnime = Array.from(new Map(formattedData.map((anime: Anime) => [anime.mal_id, anime])).values())
+      
+      setUpcomingAnime(uniqueAnime as Anime[])
     } catch (error) {
       console.error("Error fetching upcoming anime:", error)
       setUpcomingAnime([])
@@ -105,7 +109,7 @@ export default function UpcomingPage() {
                 {/* Release Date Badge Overwrite style if needed prop anj */}
                 <div className="absolute top-4 left-4 z-20">
                   <span className="px-3 py-1 bg-green-500/90 backdrop-blur text-white text-xs font-bold rounded-lg shadow-lg">
-                    {anime.aired?.prop?.from?.year || "TBA"}
+                    {anime.aired?.string?.match(/\d{4}/)?.[0] || "TBA"}
                   </span>
                 </div>
               </div>
