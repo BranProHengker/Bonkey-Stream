@@ -4,60 +4,23 @@ import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
 import AnimeModal from "@/app/components/AnimeModal"
+import AnimeCard from "@/app/components/AnimeCard"
 import { useState, useEffect } from "react"
 import Image from "next/image"
-
-import { Anime } from "@/app/types/anime";
+import { Anime } from "@/app/types/anime"
 
 interface GenreAnime {
   [key: string]: Anime[]
 }
 
 const genres = {
-  Action: 1,
-  Adventure: 2,
-  Comedy: 4,
-  Drama: 8,
-  Fantasy: 10,
-  Horror: 14,
-  Mystery: 7,
-  Romance: 22,
-  "Sci-Fi": 24,
-  "Slice of Life": 36,
-  Sports: 30,
-  Supernatural: 37,
-  Thriller: 41,
-  Psychological: 40,
-  Historical: 13,
-  Military: 38,
-  School: 23,
-  Music: 19,
-  Mecha: 18,
-  "Martial Arts": 17,
-  Hentai: 12,
-  Ecchi: 9,
-  Shounen: 27,
-  Shoujo: 25,
-  Seinen: 42,
-  Josei: 43,
-  Kids: 15,
-  Parody: 20,
-  Samurai: 21,
-  Vampire: 32,
-  Yaoi: 33,
-  Yuri: 34,
-  Harem: 35,
-  "Super Power": 31,
-  Magic: 16,
-  Demons: 6,
-  Game: 11,
-  Cars: 3,
-  Space: 29,
-  Police: 39,
-  Dementia: 5,
-} as const;
+  Action: 1, Adventure: 2, Comedy: 4, Drama: 8, Fantasy: 10, 
+  Horror: 14, Mystery: 7, Romance: 22, "Sci-Fi": 24, "Slice of Life": 36,
+  Sports: 30, Supernatural: 37, Thriller: 41, Psychological: 40,
+  Historical: 13, Military: 38, School: 23, Music: 19, Mecha: 18
+} as const
 
-type GenreKey = keyof typeof genres;
+type GenreKey = keyof typeof genres
 
 export default function GenrePage() {
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
@@ -69,7 +32,7 @@ export default function GenrePage() {
   const fetchAnimeByGenre = async (genreName: GenreKey, genreId: number) => {
     try {
       setIsLoadingData(true)
-      const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&limit=8&order_by=score&sort=desc`)
+      const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&limit=12&order_by=score&sort=desc`)
       const data = await response.json()
 
       if (data.data) {
@@ -78,12 +41,7 @@ export default function GenrePage() {
           mal_id: anime.mal_id,
           title: anime.title,
           title_english: anime.title_english,
-          images: {
-            jpg: {
-              large_image_url: anime.images.jpg.large_image_url,
-              image_url: anime.images.jpg.image_url,
-            },
-          },
+          images: anime.images,
           synopsis: anime.synopsis,
           type: anime.type,
           episodes: anime.episodes,
@@ -107,140 +65,94 @@ export default function GenrePage() {
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
+    const timer = setTimeout(() => setIsLoading(false), 1500)
     return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !genreAnime[selectedGenre]) {
       fetchAnimeByGenre(selectedGenre, genres[selectedGenre])
     }
-  }, [isLoading, selectedGenre])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, selectedGenre]) // Removed genres and genreAnime dependency loops
 
   const handleGenreChange = (genreName: GenreKey) => {
     setSelectedGenre(genreName)
-    if (!genreAnime[genreName]) {
-      fetchAnimeByGenre(genreName, genres[genreName])
-    }
   }
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
-
-  const openModal = (anime: Anime) => {
-    setSelectedAnime(anime)
-  }
-
-  const closeModal = () => {
-    setSelectedAnime(null)
-  }
+  if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30 selection:text-cyan-100">
       <Navbar />
 
-      <section className="relative h-70 sm:h-100 overflow-hidden">
-        <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-65" />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">Anime by Genre</h2>
-          <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Discover anime organized by your favorite genres. Find exactly what you're looking for.
+      {/* Hero / Header Section */}
+      <section className="relative h-[40vh] min-h-[300px] overflow-hidden flex items-center justify-center">
+        <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-40" priority />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+        
+        <div className="relative z-10 text-center px-4 animate-fade-in-up">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+            Browse by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Genre</span>
+          </h1>
+          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+            Find your perfect match. Whether you love heart-pounding action or heartwarming romance, we have it all.
           </p>
         </div>
       </section>
 
-      <section className="py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
+      <section className="py-12 container mx-auto px-4">
+        {/* Tag Cloud Navigation */}
+        <div className="mb-12">
+          <div className="flex flex-wrap justify-center gap-3 p-6 bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/5">
             {Object.keys(genres).map((genre) => (
               <button
                 key={genre}
                 onClick={() => handleGenreChange(genre as GenreKey)}
-                className={`px-3 py-2 rounded-full font-medium text-xs sm:text-sm transition-all duration-300 ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                   selectedGenre === genre
-                    ? "bg-blue-600 text-white shadow-lg transform scale-105"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 scale-105 ring-2 ring-purple-400/50"
+                    : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700"
                 }`}
               >
                 {genre}
               </button>
             ))}
           </div>
+        </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">{selectedGenre} Anime</h2>
+        {/* Content Grid */}
+        <div className="min-h-[400px]">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-white pl-4 border-l-4 border-purple-500">
+              {selectedGenre} <span className="text-slate-500 text-lg font-normal ml-2">Top Rated</span>
+            </h2>
+            <div className="hidden sm:block h-px flex-1 bg-gradient-to-r from-purple-500/50 to-transparent ml-6" />
+          </div>
 
           {isLoadingData ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="flex justify-center items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-150"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-300"></div>
-              </div>
-              <p className="mt-4 text-gray-400">Loading {selectedGenre} anime...</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-slate-800/50 rounded-2xl aspect-[3/4] animate-pulse" />
+              ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-              {genreAnime[selectedGenre]?.map((anime) => (
-                <div
-                  key={anime.mal_id}
-                  className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => openModal(anime)}
-                >
-                  <div className="relative">
-                    <Image
-                      src={anime.images.jpg.image_url || "/placeholder.svg"}
-                      alt={anime.title}
-                      width={300}
-                      height={400}
-                      className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-
-                    <div className="absolute top-2 left-2">
-                      <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
-                        {selectedGenre}
-                      </span>
-                    </div>
-
-                    {anime.score && (
-                      <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
-                        <span className="text-yellow-400 text-sm mr-1">★</span>
-                        <span className="text-white text-sm font-medium">{anime.score}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-3">
-                    <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-200">
-                      {anime.title}
-                    </h3>
-
-                    {anime.genres && anime.genres.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {anime.genres.slice(1, 3).map((genre) => (
-                          <span key={genre.mal_id} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-                            {genre.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center text-xs text-gray-400">
-                      <span>{anime.type}</span>
-                      <span>{anime.episodes ? `${anime.episodes} eps` : "Ongoing"}</span>
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {genreAnime[selectedGenre]?.map((anime, index) => (
+                <div key={anime.mal_id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <AnimeCard anime={anime} onClick={setSelectedAnime} />
                 </div>
-              )) || <p className="text-lg text-gray-400">No anime found for this genre.</p>}
+              ))}
             </div>
+          )}
+          
+          {!isLoadingData && !genreAnime[selectedGenre]?.length && (
+             <div className="text-center py-20 text-slate-500">No anime found for this genre.</div>
           )}
         </div>
       </section>
 
-      <AnimeModal anime={selectedAnime} onClose={closeModal} />
-
+      <AnimeModal anime={selectedAnime} onClose={() => setSelectedAnime(null)} />
       <Footer />
     </div>
   )

@@ -3,15 +3,16 @@ import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
 import AnimeModal from "@/app/components/AnimeModal"
+import AnimeCard from "@/app/components/AnimeCard"
 import { useState, useEffect } from "react"
 import Image from "next/image"
-
-import { Anime } from "@/app/types/anime";
+import { Anime } from "@/app/types/anime"
 
 export default function PopularPage() {
   const [popularAnime, setPopularAnime] = useState<Anime[]>([])
   const [loadingPopular, setLoadingPopular] = useState(true)
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchPopularAnime = async () => {
     setLoadingPopular(true)
@@ -46,127 +47,66 @@ export default function PopularPage() {
 
   useEffect(() => {
     fetchPopularAnime()
-  }, [])
-
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
+    const timer = setTimeout(() => setIsLoading(false), 1500)
     return () => clearTimeout(timer)
   }, [])
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
-
-  const openModal = (anime: Anime) => {
-    setSelectedAnime(anime)
-  }
-
-  const closeModal = () => {
-    setSelectedAnime(null)
-  }
+  if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30 selection:text-cyan-100">
       <Navbar />
 
-      <section className="relative h-70 sm:h-100 overflow-hidden">
+      <section className="relative h-[50vh] overflow-hidden flex items-center justify-center">
         <Image
           src="/my-kanojo-3.png"
           alt="Popular Anime Hero"
           fill
           style={{ objectFit: "cover" }}
-          className="opacity-65"
+          className="opacity-50"
+          priority
         />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-            Popular Anime Right Now
-          </h2>
-          <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Just enjoy the display of this anime streaming website which doesn&apos;t stream just data on anime.
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/60 to-slate-900" />
+        
+        <div className="relative z-10 text-center">
+          <div className="inline-block p-3 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-6 animate-bounce">
+            <span className="text-2xl">👑</span>
+          </div>
+          <h1 className="text-4xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg animate-fade-in-up">
+            Hall of <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Fame</span>
+          </h1>
+          <p className="text-lg text-slate-300 animate-fade-in-up delay-100">
+            The highest-rated anime of all time, voted by the community.
           </p>
         </div>
       </section>
 
-      <section className="py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Anime Populer</h2>
+      <section className="py-12 container mx-auto px-4 relative z-20 -mt-20">
+        <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl">
           {loadingPopular ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="flex justify-center items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-150"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-300"></div>
-              </div>
-              <p className="mt-4 text-gray-400">Memuat anime populer...</p>
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4" />
+              <p className="text-slate-400">Calculating rankings...</p>
             </div>
           ) : popularAnime.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-              {popularAnime.map((anime) => (
-                <div
-                  key={anime.mal_id}
-                  className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => openModal(anime)}
-                >
-                  <div className="relative">
-                    <Image
-                      src={anime.images.jpg.image_url || "/placeholder.svg"}
-                      alt={anime.title}
-                      width={300}
-                      height={400}
-                      className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-
-                    {anime.genres && anime.genres.length > 0 && (
-                      <div className="absolute top-2 left-2">
-                        <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
-                          {anime.genres[0].name}
-                        </span>
-                      </div>
-                    )}
-
-                    {anime.score && (
-                      <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
-                        <span className="text-yellow-400 text-sm mr-1">★</span>
-                        <span className="text-white text-sm font-medium">{anime.score}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-3">
-                    <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-200">
-                      {anime.title}
-                    </h3>
-
-                    {anime.genres && anime.genres.length > 1 && (
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {anime.genres.slice(1, 3).map((genre) => (
-                          <span key={genre.mal_id} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-                            {genre.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center text-xs text-gray-400">
-                      <span>{anime.type}</span>
-                      <span>{anime.episodes ? `${anime.episodes} eps` : "Ongoing"}</span>
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {popularAnime.map((anime, index) => (
+                <div key={anime.mal_id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <AnimeCard 
+                    anime={anime} 
+                    onClick={setSelectedAnime} 
+                    rank={index + 1}
+                  />
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-lg text-gray-400">Tidak ada anime populer ditemukan.</p>
+            <p className="text-center text-slate-400">No data available.</p>
           )}
         </div>
       </section>
 
-      <AnimeModal anime={selectedAnime} onClose={closeModal} />
-
+      <AnimeModal anime={selectedAnime} onClose={() => setSelectedAnime(null)} />
       <Footer />
     </div>
   )

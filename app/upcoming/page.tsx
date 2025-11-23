@@ -3,55 +3,28 @@ import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
 import AnimeModal from "@/app/components/AnimeModal"
+import AnimeCard from "@/app/components/AnimeCard"
 import Image from "next/image"
 import { useState, useEffect } from "react"
-
-interface AnimeGenre {
-  mal_id: number
-  name: string
-}
-
-interface AnimeImages {
-  jpg: {
-    image_url: string
-    large_image_url: string
-  }
-}
-
-interface AnimeAired {
-  prop: {
-    from: {
-      year: number | null
-    }
-  }
-  string: string
-}
-
-interface Anime {
-  mal_id: number
-  title: string
-  images: AnimeImages
-  synopsis: string
-  type: string
-  episodes: number | null
-  status: string
-  score: number | null
-  rating: string
-  genres: AnimeGenre[]
-  aired: AnimeAired
-}
+import { Anime } from "@/app/types/anime"
 
 export default function UpcomingPage() {
   const [upcomingAnime, setUpcomingAnime] = useState<Anime[]>([])
   const [loadingUpcoming, setLoadingUpcoming] = useState(true)
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchUpcomingAnime = async () => {
     setLoadingUpcoming(true)
     try {
       const response = await fetch("https://api.jikan.moe/v4/seasons/upcoming")
       const data = await response.json()
-      setUpcomingAnime(data.data || [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const formattedData = (data.data || []).map((anime: any) => ({
+        ...anime,
+        // Ensure aired prop structure consistency if needed, mostly Jikan returns it well
+      }))
+      setUpcomingAnime(formattedData)
     } catch (error) {
       console.error("Error fetching upcoming anime:", error)
       setUpcomingAnime([])
@@ -62,125 +35,86 @@ export default function UpcomingPage() {
 
   useEffect(() => {
     fetchUpcomingAnime()
-  }, [])
-
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
+    const timer = setTimeout(() => setIsLoading(false), 1500)
     return () => clearTimeout(timer)
   }, [])
 
-  if (isLoading) {
-    return <LoadingPage />
-  }
-
-  const openModal = (anime: Anime) => {
-    setSelectedAnime(anime)
-  }
-
-  const closeModal = () => {
-    setSelectedAnime(null)
-  }
+  if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white selection:bg-green-500/30 selection:text-green-100">
       <Navbar />
 
-      <section className="relative h-70 sm:h-150 overflow-hidden">
+      <section className="relative h-[45vh] overflow-hidden flex items-center justify-start px-4 md:px-20">
         <Image
           src="/my-kanojo-5.jpeg"
           alt="Upcoming Anime Hero"
           fill
           style={{ objectFit: "cover" }}
-          className="opacity-65"
+          className="opacity-50"
+          priority
         />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-            Upcoming Anime This Season
-          </h2>
-          <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Discover the most anticipated anime releases coming soon to your screens.
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent" />
+        
+        <div className="relative z-10 max-w-2xl animate-fade-in-up">
+          <div className="flex items-center space-x-3 mb-4">
+            <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-green-400 font-mono tracking-widest text-sm uppercase">Coming Soon</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Next Season's <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+              Big Hits
+            </span>
+          </h1>
+          <p className="text-lg text-slate-300 border-l-4 border-green-500 pl-6">
+            Be the first to know. Add these anticipated titles to your watchlist and get ready for the premiere.
           </p>
         </div>
       </section>
 
-      <section className="py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Anime Yang Akan Datang</h2>
-          {loadingUpcoming ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="flex justify-center items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-150"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse animation-delay-300"></div>
-              </div>
-              <p className="mt-4 text-gray-400">Memuat anime yang akan datang...</p>
-            </div>
-          ) : upcomingAnime.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-              {upcomingAnime.map((anime) => (
-                <div
-                  key={anime.mal_id}
-                  className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                  onClick={() => openModal(anime)}
-                >
-                  <div className="relative">
-                    <Image
-                      src={anime.images.jpg.image_url || "/placeholder.svg"}
-                      alt={anime.title}
-                      width={300}
-                      height={400}
-                      className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-
-                    {anime.genres && anime.genres.length > 0 && (
-                      <div className="absolute top-2 left-2">
-                        <span className="px-2 py-1 bg-green-600 text-white text-xs font-medium rounded">
-                          {anime.genres[0].name}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
-                      <span className="text-green-400 text-sm mr-1">🔜</span>
-                      <span className="text-white text-sm font-medium">Soon</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3">
-                    <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-green-400 transition-colors duration-200">
-                      {anime.title}
-                    </h3>
-
-                    {anime.genres && anime.genres.length > 1 && (
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {anime.genres.slice(1, 3).map((genre) => (
-                          <span key={genre.mal_id} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
-                            {genre.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center text-xs text-gray-400">
-                      <span>{anime.type}</span>
-                      <span>{anime.aired?.prop?.from?.year || "TBA"}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-lg text-gray-400">Tidak ada anime yang akan datang ditemukan.</p>
-          )}
+      <section className="py-12 container mx-auto px-4">
+        {/* Timeline Header */}
+        <div className="flex items-center mb-12">
+          <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-2xl mr-4 border border-slate-700 shadow-lg">
+            📅
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Release Calendar</h2>
+            <p className="text-slate-400 text-sm">Upcoming titles sorted by anticipation</p>
+          </div>
         </div>
+
+        {loadingUpcoming ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="bg-slate-800/50 rounded-2xl aspect-[3/4] animate-pulse" />
+            ))}
+          </div>
+        ) : upcomingAnime.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            {upcomingAnime.map((anime, index) => (
+              <div key={anime.mal_id} className="relative group animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                {/* Timeline Connector Line (Visual Decoration) */}
+                <div className="absolute -left-4 top-0 bottom-0 w-px bg-gradient-to-b from-slate-700 to-transparent hidden xl:block opacity-30" />
+                
+                <AnimeCard anime={anime} onClick={setSelectedAnime} />
+                
+                {/* Release Date Badge Overwrite style if needed */}
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="px-3 py-1 bg-green-500/90 backdrop-blur text-white text-xs font-bold rounded-lg shadow-lg">
+                    {anime.aired?.prop?.from?.year || "TBA"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-lg text-slate-400">No upcoming anime found.</p>
+        )}
       </section>
 
-      <AnimeModal anime={selectedAnime} onClose={closeModal} />
-
+      <AnimeModal anime={selectedAnime} onClose={() => setSelectedAnime(null)} />
       <Footer />
     </div>
   )
