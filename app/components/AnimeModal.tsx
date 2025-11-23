@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-// Definisikan tipe langsung di sini
 interface AnimeGenre {
   mal_id: number;
   name: string;

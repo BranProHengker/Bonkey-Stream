@@ -2,11 +2,10 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
-import AnimeModal from "@/app/components/AnimeModal" // Import AnimeModal
+import AnimeModal from "@/app/components/AnimeModal"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 
-// Definisikan tipe data sesuai dengan respons API Jikan
 interface AnimeGenre {
   mal_id: number
   name: string
@@ -43,14 +42,14 @@ interface Anime {
 }
 
 export default function UpcomingPage() {
-  const [upcomingAnime, setUpcomingAnime] = useState<Anime[]>([]) // Perbaikan tipe data
+  const [upcomingAnime, setUpcomingAnime] = useState<Anime[]>([])
   const [loadingUpcoming, setLoadingUpcoming] = useState(true)
-  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null) // Perbaikan tipe data
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
 
   const fetchUpcomingAnime = async () => {
     setLoadingUpcoming(true)
     try {
-      const response = await fetch("https://api.jikan.moe/v4/seasons/upcoming") // Hapus spasi di akhir URL
+      const response = await fetch("https://api.jikan.moe/v4/seasons/upcoming")
       const data = await response.json()
       setUpcomingAnime(data.data || [])
     } catch (error) {
@@ -137,7 +136,6 @@ export default function UpcomingPage() {
                       className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
                     />
 
-                    {/* Genre badge in top-left */}
                     {anime.genres && anime.genres.length > 0 && (
                       <div className="absolute top-2 left-2">
                         <span className="px-2 py-1 bg-green-600 text-white text-xs font-medium rounded">
@@ -146,20 +144,17 @@ export default function UpcomingPage() {
                       </div>
                     )}
 
-                    {/* Upcoming badge in top-right */}
                     <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
                       <span className="text-green-400 text-sm mr-1">🔜</span>
                       <span className="text-white text-sm font-medium">Soon</span>
                     </div>
                   </div>
 
-                  {/* Title and additional info below image */}
                   <div className="p-3">
                     <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-green-400 transition-colors duration-200">
                       {anime.title}
                     </h3>
 
-                    {/* Additional genre tags */}
                     {anime.genres && anime.genres.length > 1 && (
                       <div className="flex flex-wrap gap-1 mb-2">
                         {anime.genres.slice(1, 3).map((genre) => (
@@ -184,7 +179,6 @@ export default function UpcomingPage() {
         </div>
       </section>
 
-      {/* Ganti modal manual dengan komponen AnimeModal */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />

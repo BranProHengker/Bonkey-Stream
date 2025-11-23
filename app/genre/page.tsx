@@ -7,14 +7,12 @@ import AnimeModal from "@/app/components/AnimeModal"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-// Impor tipe Anime dari file types
 import { Anime } from "@/app/types/anime";
 
 interface GenreAnime {
   [key: string]: Anime[]
 }
 
-// Tetapkan objek genres sebagai konstan agar TypeScript bisa infer tipe key-nya
 const genres = {
   Action: 1,
   Adventure: 2,
@@ -59,17 +57,16 @@ const genres = {
   Dementia: 5,
 } as const;
 
-// Tipe GenreKey sekarang otomatis: "Action" | "Adventure" | ...
 type GenreKey = keyof typeof genres;
 
 export default function GenrePage() {
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
-  const [selectedGenre, setSelectedGenre] = useState<GenreKey>("Action") // ✅ Tipe diperbaiki
+  const [selectedGenre, setSelectedGenre] = useState<GenreKey>("Action")
   const [genreAnime, setGenreAnime] = useState<GenreAnime>({})
   const [isLoadingData, setIsLoadingData] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const fetchAnimeByGenre = async (genreName: GenreKey, genreId: number) => { // ✅ Tipe parameter diperbaiki
+  const fetchAnimeByGenre = async (genreName: GenreKey, genreId: number) => {
     try {
       setIsLoadingData(true)
       const response = await fetch(`https://api.jikan.moe/v4/anime?genres=${genreId}&limit=8&order_by=score&sort=desc`)
@@ -78,7 +75,6 @@ export default function GenrePage() {
       if (data.data) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedAnime = data.data.map((anime: any) => ({
-          // ✅ Pastikan struktur objek sesuai dengan tipe Anime
           mal_id: anime.mal_id,
           title: anime.title,
           title_english: anime.title_english,
@@ -95,7 +91,7 @@ export default function GenrePage() {
           score: anime.score,
           rating: anime.rating,
           genres: anime.genres?.map((g: { mal_id: number; name: string }) => ({ mal_id: g.mal_id, name: g.name })) || [],
-          aired: anime.aired, // Harapkan struktur yang sesuai dengan AnimeAired
+          aired: anime.aired,
         }))
 
         setGenreAnime((prev) => ({
@@ -119,14 +115,14 @@ export default function GenrePage() {
 
   useEffect(() => {
     if (!isLoading) {
-      fetchAnimeByGenre(selectedGenre, genres[selectedGenre]) // ✅ Sekarang aman
+      fetchAnimeByGenre(selectedGenre, genres[selectedGenre])
     }
-  }, [isLoading, selectedGenre]) // ✅ Removed genres from dependency
+  }, [isLoading, selectedGenre])
 
-  const handleGenreChange = (genreName: GenreKey) => { // ✅ Tipe parameter diperbaiki
+  const handleGenreChange = (genreName: GenreKey) => {
     setSelectedGenre(genreName)
     if (!genreAnime[genreName]) {
-      fetchAnimeByGenre(genreName, genres[genreName]) // ✅ Sekarang aman
+      fetchAnimeByGenre(genreName, genres[genreName])
     }
   }
 
@@ -162,7 +158,7 @@ export default function GenrePage() {
             {Object.keys(genres).map((genre) => (
               <button
                 key={genre}
-                onClick={() => handleGenreChange(genre as GenreKey)} // ✅ Pastikan genre adalah GenreKey
+                onClick={() => handleGenreChange(genre as GenreKey)}
                 className={`px-3 py-2 rounded-full font-medium text-xs sm:text-sm transition-all duration-300 ${
                   selectedGenre === genre
                     ? "bg-blue-600 text-white shadow-lg transform scale-105"
@@ -189,7 +185,7 @@ export default function GenrePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
               {genreAnime[selectedGenre]?.map((anime) => (
                 <div
-                  key={anime.mal_id} // ✅ Gunakan mal_id sebagai key
+                  key={anime.mal_id}
                   className="group relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   onClick={() => openModal(anime)}
                 >
@@ -202,14 +198,12 @@ export default function GenrePage() {
                       className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
                     />
 
-                    {/* Genre badge in top-left */}
                     <div className="absolute top-2 left-2">
                       <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
                         {selectedGenre}
                       </span>
                     </div>
 
-                    {/* Rating in top-right */}
                     {anime.score && (
                       <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
                         <span className="text-yellow-400 text-sm mr-1">★</span>
@@ -218,13 +212,11 @@ export default function GenrePage() {
                     )}
                   </div>
 
-                  {/* Title and additional info below image */}
                   <div className="p-3">
                     <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-200">
                       {anime.title}
                     </h3>
 
-                    {/* Additional genre tags */}
                     {anime.genres && anime.genres.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-2">
                         {anime.genres.slice(1, 3).map((genre) => (
@@ -247,7 +239,6 @@ export default function GenrePage() {
         </div>
       </section>
 
-      {/* ✅ AnimeModal sekarang menerima tipe Anime yang benar */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />

@@ -2,26 +2,23 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
-import AnimeModal from "@/app/components/AnimeModal" // Import AnimeModal
+import AnimeModal from "@/app/components/AnimeModal"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-// ✅ Impor tipe Anime dari file types
 import { Anime } from "@/app/types/anime";
 
 export default function PopularPage() {
-  const [popularAnime, setPopularAnime] = useState<Anime[]>([]) // ✅ Pastikan tipe ini Anime[]
+  const [popularAnime, setPopularAnime] = useState<Anime[]>([])
   const [loadingPopular, setLoadingPopular] = useState(true)
-  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null) // ✅ Pastikan tipe ini Anime | null
+  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
 
   const fetchPopularAnime = async () => {
     setLoadingPopular(true)
     try {
-      // ✅ Tambahkan `as const` atau `as Anime[]` jika diperlukan
-      const response = await fetch("https://api.jikan.moe/v4/top/anime") // Hapus spasi di akhir URL
+      const response = await fetch("https://api.jikan.moe/v4/top/anime")
       const data = await response.json()
 
-      // ✅ Pastikan data disesuaikan dengan tipe Anime
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formattedAnime = data.data?.map((a: any) => ({
         mal_id: a.mal_id,
@@ -64,7 +61,6 @@ export default function PopularPage() {
     return <LoadingPage />
   }
 
-  // ✅ Tambahkan tipe parameter 'anime' di sini
   const openModal = (anime: Anime) => {
     setSelectedAnime(anime)
   }
@@ -124,7 +120,6 @@ export default function PopularPage() {
                       className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
                     />
 
-                    {/* Genre badge in top-left */}
                     {anime.genres && anime.genres.length > 0 && (
                       <div className="absolute top-2 left-2">
                         <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded">
@@ -133,7 +128,6 @@ export default function PopularPage() {
                       </div>
                     )}
 
-                    {/* Rating in top-right */}
                     {anime.score && (
                       <div className="absolute top-2 right-2 flex items-center bg-black bg-opacity-70 px-2 py-1 rounded">
                         <span className="text-yellow-400 text-sm mr-1">★</span>
@@ -142,13 +136,11 @@ export default function PopularPage() {
                     )}
                   </div>
 
-                  {/* Title and additional info below image */}
                   <div className="p-3">
                     <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors duration-200">
                       {anime.title}
                     </h3>
 
-                    {/* Additional genre tags */}
                     {anime.genres && anime.genres.length > 1 && (
                       <div className="flex flex-wrap gap-1 mb-2">
                         {anime.genres.slice(1, 3).map((genre) => (
@@ -173,7 +165,6 @@ export default function PopularPage() {
         </div>
       </section>
 
-      {/* ✅ AnimeModal sekarang menerima tipe Anime yang benar */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />

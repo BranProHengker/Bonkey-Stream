@@ -3,16 +3,13 @@
 import Navbar from "@/app/components/Navbar"
 import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
-import AnimeModal from "@/app/components/AnimeModal" // Pastikan import ini benar
+import AnimeModal from "@/app/components/AnimeModal"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-// Impor tipe Anime dari file types
 import { Anime } from "@/app/types/anime";
 
 export default function HomePage() {
-  // const [query, setQuery] = useState("")
-  // const [loading, setLoading] = useState(false)
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
   const [recommendedAnime, setRecommendedAnime] = useState<Anime[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -24,9 +21,9 @@ export default function HomePage() {
         setIsLoading(true)
         const animeNames = [
           "Berserk",
-          "Josee to Tora to Sakana-tachi", // Josee, the Tiger and the Fish
-          "Koe no Katachi", // Silent Voice
-          "JoJo no Kimyou na Bouken", // JoJo's Bizarre Adventure
+          "Josee to Tora to Sakana-tachi",
+          "Koe no Katachi",
+          "JoJo no Kimyou na Bouken",
         ]
 
         const animePromises = animeNames.map(async (name, index) => {
@@ -44,7 +41,6 @@ export default function HomePage() {
 
             if (data && data.data && data.data.length > 0) {
               console.log(`[v0] Successfully found: ${data.data[0].title}`)
-              // ✅ Pastikan struktur objek sesuai dengan tipe Anime
               const anime = data.data[0];
               return {
                 mal_id: anime.mal_id,
@@ -56,9 +52,9 @@ export default function HomePage() {
                 episodes: anime.episodes,
                 status: anime.status,
                 score: anime.score,
-                rating: anime.rating || "Unknown", // ✅ Tambahkan rating
+                rating: anime.rating || "Unknown",
                 genres: anime.genres?.map((g: { mal_id: number; name: string }) => ({ mal_id: g.mal_id, name: g.name })) || [],
-                aired: anime.aired || { string: "Unknown" }, // ✅ Tambahkan aired
+                aired: anime.aired || { string: "Unknown" },
               } as Anime;
             } else {
               console.error(`[v0] No results found for ${name}`)
@@ -75,7 +71,6 @@ export default function HomePage() {
 
         if (validResults.length === 0) {
           console.warn("[v0] No anime found from API, using fallback data")
-          // ✅ Pastikan fallback data juga sesuai tipe Anime
           const fallbackData: Anime[] = [
             {
               mal_id: 1,
@@ -92,12 +87,12 @@ export default function HomePage() {
               episodes: 25,
               status: "Finished Airing",
               score: 8.7,
-              rating: "R - 17+ (violence & profanity)", // ✅ Tambahkan rating
+              rating: "R - 17+ (violence & profanity)",
               genres: [
                 { mal_id: 1, name: "Action" },
                 { mal_id: 2, name: "Drama" },
               ],
-              aired: { string: "1997" }, // ✅ Tambahkan aired
+              aired: { string: "1997" },
             },
             {
               mal_id: 2,
@@ -114,12 +109,12 @@ export default function HomePage() {
               episodes: 1,
               status: "Finished Airing",
               score: 8.2,
-              rating: "PG-13", // ✅ Tambahkan rating
+              rating: "PG-13",
               genres: [
                 { mal_id: 8, name: "Romance" },
                 { mal_id: 9, name: "Drama" },
               ],
-              aired: { string: "2020" }, // ✅ Tambahkan aired
+              aired: { string: "2020" },
             },
             {
               mal_id: 3,
@@ -136,12 +131,12 @@ export default function HomePage() {
               episodes: 1,
               status: "Finished Airing",
               score: 8.9,
-              rating: "PG-13", // ✅ Tambahkan rating
+              rating: "PG-13",
               genres: [
                 { mal_id: 5, name: "Drama" },
                 { mal_id: 6, name: "School" },
               ],
-              aired: { string: "2016" }, // ✅ Tambahkan aired
+              aired: { string: "2016" },
             },
             {
               mal_id: 4,
@@ -158,12 +153,12 @@ export default function HomePage() {
               episodes: 26,
               status: "Finished Airing",
               score: 8.5,
-              rating: "PG-13", // ✅ Tambahkan rating
+              rating: "PG-13",
               genres: [
                 { mal_id: 7, name: "Action" },
                 { mal_id: 8, name: "Adventure" },
               ],
-              aired: { string: "2012" }, // ✅ Tambahkan aired
+              aired: { string: "2012" },
             },
           ]
           setRecommendedAnime(fallbackData)
@@ -277,7 +272,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ✅ AnimeModal sekarang menerima tipe Anime yang benar */}
       <AnimeModal anime={selectedAnime} onClose={closeModal} />
 
       <Footer />
