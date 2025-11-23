@@ -12,6 +12,18 @@ export interface AnimeImages {
 
 export interface AnimeAired {
   string: string;
+  prop?: {
+    from: {
+      day: number | null;
+      month: number | null;
+      year: number | null;
+    };
+    to: {
+      day: number | null;
+      month: number | null;
+      year: number | null;
+    };
+  };
 }
 
 export interface Anime {
