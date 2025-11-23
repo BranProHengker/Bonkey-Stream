@@ -70,7 +70,9 @@ export default function PopularPage() {
         
         <div className="relative z-10 text-center">
           <div className="inline-block p-3 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-6 animate-bounce">
-            <span className="text-2xl">👑</span>
+            <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
           </div>
           <h1 className="text-4xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg animate-fade-in-up">
             Hall of <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Fame</span>

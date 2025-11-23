@@ -93,7 +93,7 @@ export default function GenrePage() {
         
         <div className="relative z-10 text-center px-4 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
-            Browse by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Genre</span>
+            Browse by <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Genre</span>
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
             Find your perfect match. Whether you love heart-pounding action or heartwarming romance, we have it all.
@@ -111,7 +111,7 @@ export default function GenrePage() {
                 onClick={() => handleGenreChange(genre as GenreKey)}
                 className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                   selectedGenre === genre
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 scale-105 ring-2 ring-purple-400/50"
+                    ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/25 scale-105 ring-2 ring-cyan-400/50"
                     : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700"
                 }`}
               >
@@ -124,10 +124,10 @@ export default function GenrePage() {
         {/* Content Grid */}
         <div className="min-h-[400px]">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white pl-4 border-l-4 border-purple-500">
+            <h2 className="text-3xl font-bold text-white pl-4 border-l-4 border-cyan-500">
               {selectedGenre} <span className="text-slate-500 text-lg font-normal ml-2">Top Rated</span>
             </h2>
-            <div className="hidden sm:block h-px flex-1 bg-gradient-to-r from-purple-500/50 to-transparent ml-6" />
+            <div className="hidden sm:block h-px flex-1 bg-gradient-to-r from-cyan-500/50 to-transparent ml-6" />
           </div>
 
           {isLoadingData ? (

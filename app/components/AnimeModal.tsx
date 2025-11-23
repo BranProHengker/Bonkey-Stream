@@ -40,11 +40,11 @@ export default function AnimeModal({ anime, onClose }: AnimeModalProps) {
   if (!anime) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4">
-      <div className="bg-gray-900 rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex justify-center items-center z-50 p-4 transition-all duration-300">
+      <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative shadow-2xl shadow-cyan-500/10">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white hover:text-gray-400 z-10 bg-gray-800 rounded-full p-2 transition-colors duration-200"
+          className="absolute top-4 right-4 text-slate-400 z-10 bg-slate-800/50 hover:bg-red-500/20 hover:text-red-400 rounded-full p-2 transition-all duration-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
