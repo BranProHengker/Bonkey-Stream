@@ -1,35 +1,5 @@
 import Image from "next/image";
-
-interface AnimeGenre {
-  mal_id: number;
-  name: string;
-}
-
-interface AnimeImages {
-  jpg: {
-    image_url: string;
-    large_image_url: string;
-  };
-}
-
-interface AnimeAired {
-  string: string;
-}
-
-interface Anime {
-  mal_id: number;
-  title: string;
-  title_english?: string;
-  images: AnimeImages;
-  synopsis: string;
-  type: string;
-  episodes: number | null;
-  status: string;
-  score: number | null;
-  rating: string;
-  genres: AnimeGenre[];
-  aired: AnimeAired;
-}
+import { Anime } from "@/app/types/anime";
 
 interface AnimeModalProps {
   anime: Anime | null;
