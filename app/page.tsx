@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import type React from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -28,9 +29,11 @@ export default function LoginPage() {
           <div className="relative z-10">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-24 h-24 border-2 border-cyan-400/50 rounded-full mb-6 overflow-hidden animate-bounce-subtle">
-                <img
+                <Image
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/favicon-ShpnuY9WRbSxysdYDQcXTtWFIK73YZ.png"
                   alt="Anime Character"
+                  width={80}
+                  height={80}
                   className="w-20 h-20 object-cover rounded-full animate-float"
                 />
               </div>

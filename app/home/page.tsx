@@ -212,7 +212,7 @@ export default function HomePage() {
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">Database anime</h2>
           <p className="max-w-2xl text-lg sm:text-xl text-gray-200 mb-8 drop-shadow-md leading-relaxed">
-            Just enjoy the display of this anime streaming website which doesn't stream just data on anime.
+            Just enjoy the display of this anime streaming website which doesn&apos;t stream just data on anime.
           </p>
         </div>
       </section>

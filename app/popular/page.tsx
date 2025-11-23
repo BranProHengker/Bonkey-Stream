@@ -86,7 +86,7 @@ export default function PopularPage() {
             Popular Anime Right Now
           </h2>
           <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-300 drop-shadow-md">
-            Just enjoy the display of this anime streaming website which doesn't stream just data on anime.
+            Just enjoy the display of this anime streaming website which doesn&apos;t stream just data on anime.
           </p>
         </div>
       </section>
