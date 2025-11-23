@@ -47,7 +47,7 @@ export default function UpcomingPage() {
 
       <section className="relative h-[65vh] overflow-hidden flex items-center justify-start px-4 md:px-20">
         <Image
-          src="/popular-img.png"
+          src="/upcoming-img.png"
           alt="Upcoming Anime Hero"
           fill
           style={{ objectFit: "cover" }}

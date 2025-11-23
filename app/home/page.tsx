@@ -7,6 +7,7 @@ import AnimeModal from "@/app/components/AnimeModal"
 import AnimeCard from "@/app/components/AnimeCard"
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Anime } from "@/app/types/anime"
 
 export default function HomePage() {
@@ -113,9 +114,9 @@ export default function HomePage() {
             <button className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 w-full sm:w-auto">
               Browse Database
             </button>
-            <button className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md text-white font-semibold rounded-xl border border-white/10 transition-all hover:scale-105 w-full sm:w-auto">
+            <Link href="/genre" className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md text-white font-semibold rounded-xl border border-white/10 transition-all hover:scale-105 w-full sm:w-auto text-center">
               Explore Genres
-            </button>
+            </Link>
           </div>
         </div>
 

@@ -87,7 +87,7 @@ export default function GenrePage() {
       <Navbar />
 
       {/* Hero / Header Section */}
-      <section className="relative h-[40vh] min-h-[300px] overflow-hidden flex items-center justify-center">
+      <section className="relative h-[50vh] min-h-[300px] overflow-hidden flex items-center justify-center">
         <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-40" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
         

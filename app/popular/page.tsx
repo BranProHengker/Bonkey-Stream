@@ -57,9 +57,9 @@ export default function PopularPage() {
     <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30 selection:text-cyan-100">
       <Navbar />
 
-      <section className="relative h-[50vh] overflow-hidden flex items-center justify-center">
+      <section className="relative h-[65vh] overflow-hidden flex items-center justify-center">
         <Image
-          src="/my-kanojo-3.png"
+          src="/popular.png"
           alt="Popular Anime Hero"
           fill
           style={{ objectFit: "cover" }}
