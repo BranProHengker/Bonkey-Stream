@@ -102,7 +102,7 @@ export default function UpcomingPage() {
                 
                 <AnimeCard anime={anime} onClick={setSelectedAnime} />
                 
-                {/* Release Date Badge Overwrite style if needed */}
+                {/* Release Date Badge Overwrite style if needed prop anj */}
                 <div className="absolute top-4 left-4 z-20">
                   <span className="px-3 py-1 bg-green-500/90 backdrop-blur text-white text-xs font-bold rounded-lg shadow-lg">
                     {anime.aired?.prop?.from?.year || "TBA"}
