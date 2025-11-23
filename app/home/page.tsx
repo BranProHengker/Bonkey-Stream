@@ -94,7 +94,7 @@ export default function HomePage() {
         <div className="relative z-10 container mx-auto px-4 text-center">
           <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 animate-fade-in-down">
             <span className="text-cyan-400 font-semibold tracking-wider text-sm uppercase">
-              Welcome to the Future of Streaming
+              Your Ultimate Anime Database
             </span>
           </div>
           
@@ -106,13 +106,12 @@ export default function HomePage() {
           </h1>
           
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-relaxed animate-fade-in-up delay-100">
-            Dive into an immersive anime experience. Discover thousands of titles with 
-            premium quality streaming and a community that shares your passion.
+            Dive into an immersive anime library. Discover thousands of titles, track your progress, and explore the community.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-200">
             <button className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 w-full sm:w-auto">
-              Start Watching Now
+              Browse Database
             </button>
             <button className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md text-white font-semibold rounded-xl border border-white/10 transition-all hover:scale-105 w-full sm:w-auto">
               Explore Genres

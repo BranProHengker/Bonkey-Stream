@@ -8,9 +8,9 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
-                <img src="/favicon.png" alt="Bonkey Stream Logo" className="w-full h-full object-cover" />
+                <img src="/favicon.png" alt="Bonkey DB Logo" className="w-full h-full object-cover" />
               </div>
-              <span className="text-2xl font-bold text-white">Bonkey Stream</span>
+              <span className="text-2xl font-bold text-white">Bonkey DB</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
               Your ultimate destination for discovering and exploring the world of anime. Join our community of anime

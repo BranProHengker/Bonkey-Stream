@@ -40,7 +40,7 @@ export default function Navbar() {
               <img src="/favicon.png" alt="Bonkey Stream" className="w-full h-full object-cover" />
             </div>
             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 group-hover:from-cyan-300 group-hover:to-blue-400 transition-all duration-300">
-              Bonkey Stream
+              Bonkey DB
             </span>
           </Link>
 

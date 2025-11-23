@@ -48,7 +48,7 @@ export default function AuthPage() {
             <p className="text-slate-400 text-lg">
               {isLogin
                 ? "Ready to continue your anime journey?"
-                : "Start your adventure with Bonkey Stream today."}
+                : "Start your adventure with Bonkey DB today."}
             </p>
           </div>
 
@@ -238,14 +238,14 @@ export default function AuthPage() {
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-16 pb-24">
           <div className="max-w-lg space-y-6 animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <div className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/30 backdrop-blur-md">
-              <span className="text-cyan-300 text-sm font-semibold tracking-wide uppercase">All Database Anime</span>
+              <span className="text-cyan-300 text-sm font-semibold tracking-wide uppercase">Ultimate Anime Database</span>
             </div>
             <h2 className="text-5xl font-bold text-white leading-tight">
               Discover Your Next <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Favorite Anime</span>
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">
-              Join thousands of anime enthusiasts.Look your favorite anime, track your progress, and connect with the community.
+              Join thousands of anime enthusiasts. Explore your favorite anime, track your progress, and connect with the community.
             </p>
             
             {/* Stats */}
@@ -255,8 +255,8 @@ export default function AuthPage() {
                 <p className="text-sm text-slate-400">Anime Titles</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-white">0$</p>
-                <p className="text-sm text-slate-400">Always Free</p>
+                <p className="text-3xl font-bold text-white">100%</p>
+                <p className="text-sm text-slate-400">Free Access</p>
               </div>
             </div>
           </div>
