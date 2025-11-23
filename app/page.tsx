@@ -35,7 +35,7 @@ export default function AuthPage() {
           <div className="text-center lg:text-left animate-fade-in">
             <div className="inline-flex items-center justify-center w-16 h-16 border-2 border-cyan-400/30 rounded-2xl mb-6 overflow-hidden shadow-lg shadow-cyan-400/20">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/favicon-ShpnuY9WRbSxysdYDQcXTtWFIK73YZ.png"
+                src="/favicon.png"
                 alt="Logo"
                 width={64}
                 height={64}
@@ -225,7 +225,7 @@ export default function AuthPage() {
         {/* Background Image */}
         <div className="absolute inset-0 animate-slow-zoom">
           <Image
-            src="/my-kanojo-2.jpeg"
+            src="/banner-login.png"
             alt="Anime Collage"
             fill
             style={{ objectFit: "cover" }}
@@ -238,14 +238,14 @@ export default function AuthPage() {
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-16 pb-24">
           <div className="max-w-lg space-y-6 animate-slide-up" style={{ animationDelay: "0.3s" }}>
             <div className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/30 backdrop-blur-md">
-              <span className="text-cyan-300 text-sm font-semibold tracking-wide uppercase">Premium Streaming</span>
+              <span className="text-cyan-300 text-sm font-semibold tracking-wide uppercase">All Database Anime</span>
             </div>
             <h2 className="text-5xl font-bold text-white leading-tight">
               Discover Your Next <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Favorite Anime</span>
             </h2>
             <p className="text-lg text-slate-300 leading-relaxed">
-              Join thousands of anime enthusiasts. Stream the latest episodes, track your progress, and connect with the community.
+              Join thousands of anime enthusiasts.Look your favorite anime, track your progress, and connect with the community.
             </p>
             
             {/* Stats */}
@@ -257,10 +257,6 @@ export default function AuthPage() {
               <div>
                 <p className="text-3xl font-bold text-white">0$</p>
                 <p className="text-sm text-slate-400">Always Free</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-white">HD</p>
-                <p className="text-sm text-slate-400">Quality Stream</p>
               </div>
             </div>
           </div>
