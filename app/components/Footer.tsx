@@ -1,9 +1,10 @@
+import Link from 'next/link'
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
@@ -22,51 +23,49 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Discover</h3>
             <ul className="space-y-3">
               <li>
-                <a href="/popular" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="/popular" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Popular Anime
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/genre" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="/genre" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Browse Genres
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Top Rated
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   New Releases
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Community */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Community</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Reviews
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Discussions
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
+                <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Watchlists
-                </a>
+                </Link>
               </li>
               <li>
                 <a
@@ -81,7 +80,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Connect */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Connect</h3>
             <div className="flex space-x-3">
@@ -138,13 +136,13 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-400">
               <span>&copy; 2025 Gust Sigma. All rights reserved.</span>
               <div className="flex items-center space-x-4">
-                <a href="#" className="hover:text-white transition-colors duration-200">
+                <Link href="#" className="hover:text-white transition-colors duration-200">
                   Privacy Policy
-                </a>
+                </Link>
                 <span className="text-gray-600">•</span>
-                <a href="#" className="hover:text-white transition-colors duration-200">
+                <Link href="#" className="hover:text-white transition-colors duration-200">
                   Terms of Service
-                </a>
+                </Link>
               </div>
             </div>
             <div className="flex items-center space-x-3">

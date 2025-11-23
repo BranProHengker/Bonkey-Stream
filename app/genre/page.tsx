@@ -76,6 +76,7 @@ export default function GenrePage() {
       const data = await response.json()
 
       if (data.data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedAnime = data.data.map((anime: any) => ({
           // ✅ Pastikan struktur objek sesuai dengan tipe Anime
           mal_id: anime.mal_id,
@@ -93,7 +94,7 @@ export default function GenrePage() {
           status: anime.status,
           score: anime.score,
           rating: anime.rating,
-          genres: anime.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
+          genres: anime.genres?.map((g: { mal_id: number; name: string }) => ({ mal_id: g.mal_id, name: g.name })) || [],
           aired: anime.aired, // Harapkan struktur yang sesuai dengan AnimeAired
         }))
 
@@ -120,7 +121,7 @@ export default function GenrePage() {
     if (!isLoading) {
       fetchAnimeByGenre(selectedGenre, genres[selectedGenre]) // ✅ Sekarang aman
     }
-  }, [isLoading, selectedGenre, genres]) // ✅ Tambahkan genres ke dependency agar tidak ada warning
+  }, [isLoading, selectedGenre]) // ✅ Removed genres from dependency
 
   const handleGenreChange = (genreName: GenreKey) => { // ✅ Tipe parameter diperbaiki
     setSelectedGenre(genreName)

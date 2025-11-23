@@ -11,8 +11,8 @@ import Image from "next/image"
 import { Anime } from "@/app/types/anime";
 
 export default function HomePage() {
-  const [query, setQuery] = useState("")
-  const [loading, setLoading] = useState(false)
+  // const [query, setQuery] = useState("")
+  // const [loading, setLoading] = useState(false)
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
   const [recommendedAnime, setRecommendedAnime] = useState<Anime[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -57,7 +57,7 @@ export default function HomePage() {
                 status: anime.status,
                 score: anime.score,
                 rating: anime.rating || "Unknown", // ✅ Tambahkan rating
-                genres: anime.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
+                genres: anime.genres?.map((g: { mal_id: number; name: string }) => ({ mal_id: g.mal_id, name: g.name })) || [],
                 aired: anime.aired || { string: "Unknown" }, // ✅ Tambahkan aired
               } as Anime;
             } else {

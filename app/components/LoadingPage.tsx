@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 
+const loadingMessages = ["Loading", "Preparing content", "Almost ready"]
+
 export default function LoadingPage() {
   const [progress, setProgress] = useState(0)
   const [loadingText, setLoadingText] = useState("Loading")
-
-  const loadingMessages = ["Loading", "Preparing content", "Almost ready"]
 
   useEffect(() => {
     const interval = setInterval(() => {

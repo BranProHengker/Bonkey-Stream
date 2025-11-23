@@ -22,6 +22,7 @@ export default function PopularPage() {
       const data = await response.json()
 
       // ✅ Pastikan data disesuaikan dengan tipe Anime
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formattedAnime = data.data?.map((a: any) => ({
         mal_id: a.mal_id,
         title: a.title,
@@ -33,7 +34,7 @@ export default function PopularPage() {
         status: a.status,
         score: a.score,
         rating: a.rating || "Unknown",
-        genres: a.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
+        genres: a.genres?.map((g: { mal_id: number; name: string }) => ({ mal_id: g.mal_id, name: g.name })) || [],
         aired: a.aired || { string: "Unknown" },
       })) as Anime[] || []
 
