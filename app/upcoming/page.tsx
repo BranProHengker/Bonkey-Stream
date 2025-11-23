@@ -45,9 +45,9 @@ export default function UpcomingPage() {
     <div className="min-h-screen bg-slate-900 text-white selection:bg-green-500/30 selection:text-green-100">
       <Navbar />
 
-      <section className="relative h-[45vh] overflow-hidden flex items-center justify-start px-4 md:px-20">
+      <section className="relative h-[65vh] overflow-hidden flex items-center justify-start px-4 md:px-20">
         <Image
-          src="/my-kanojo-5.jpeg"
+          src="/popular-img.png"
           alt="Upcoming Anime Hero"
           fill
           style={{ objectFit: "cover" }}
@@ -76,8 +76,10 @@ export default function UpcomingPage() {
       <section className="py-12 container mx-auto px-4">
         {/* Timeline Header */}
         <div className="flex items-center mb-12">
-          <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-2xl mr-4 border border-slate-700 shadow-lg">
-            📅
+          <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-green-500 mr-4 border border-slate-700 shadow-lg">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </div>
           <div>
             <h2 className="text-2xl font-bold text-white">Release Calendar</h2>
