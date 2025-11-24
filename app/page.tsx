@@ -48,7 +48,7 @@ export default function AuthPage() {
             <p className="text-slate-400 text-lg">
               {isLogin
                 ? "Ready to continue your anime journey?"
-                : "Start your adventure with Bonkey DB today."}
+                : "Start your adventure with Bonkey Stream today."}
             </p>
           </div>
 
