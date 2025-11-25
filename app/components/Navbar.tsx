@@ -152,7 +152,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/home" className="flex items-center space-x-3 group">
               <div className="relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-cyan-400/30 group-hover:ring-cyan-400 transition-all duration-300 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
-                <Image src="/favicon.png" alt="Bonkey DB" width={40} height={40} className="w-full h-full object-cover" />
+                <Image src="/favicon.png" alt="Bonkey Stream" width={40} height={40} className="w-full h-full object-cover" />
               </div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-500 dark:from-white dark:to-slate-400 group-hover:from-cyan-500 group-hover:to-blue-500 transition-all duration-300">
                 Bonkey DB
