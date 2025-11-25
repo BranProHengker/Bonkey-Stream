@@ -21,6 +21,7 @@ export default function AnimeCard({ anime, onClick, rank }: AnimeCardProps) {
           src={anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || "/placeholder.svg"}
           alt={anime.title}
           fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           style={{ objectFit: "cover" }}
           className="transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
         />
