@@ -136,6 +136,7 @@ export default function Navbar() {
     { name: "Popular", path: "/popular" },
     { name: "Genres", path: "/genre" },
     { name: "Upcoming", path: "/upcoming" },
+    { name: "Stream", path: "/stream" },
   ]
 
   return (
@@ -155,7 +156,7 @@ export default function Navbar() {
                 <Image src="/favicon.png" alt="Bonkey Stream" width={40} height={40} className="w-full h-full object-cover" />
               </div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-500 dark:from-white dark:to-slate-400 group-hover:from-cyan-500 group-hover:to-blue-500 transition-all duration-300">
-                Bonkey DB
+                Bonkey Stream
               </span>
             </Link>
 

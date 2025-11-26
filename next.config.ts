@@ -1,10 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
   images: {
     unoptimized: true,
-    domains: ['cdn.myanimelist.net', 'i.imgur.com', 'i.pinimg.com', 'github.com', 'img.icons8.com'],
+    remotePatterns: [
+        { hostname: 'cdn.myanimelist.net' },
+        { hostname: 'i.imgur.com' },
+        { hostname: 'i.pinimg.com' },
+        { hostname: 'github.com' },
+        { hostname: 'img.icons8.com' },
+        { hostname: 'otakudesu.best' },
+        { hostname: 'v1.samehadaku.how' } // Added for Samehadaku API
+    ],
   },
 };
 
