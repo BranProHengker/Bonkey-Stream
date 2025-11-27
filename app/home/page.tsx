@@ -81,6 +81,7 @@ export default function HomePage() {
             src="/my-kanojo-2.jpeg"
             alt="Hero Background"
             fill
+            sizes="100vw"
             style={{ objectFit: "cover" }}
             className="opacity-60"
             priority
@@ -93,36 +94,36 @@ export default function HomePage() {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 animate-fade-in-down">
+          <div className="inline-block mb-6 px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 animate-fade-in-down shadow-lg shadow-black/20">
             <span className="text-cyan-400 font-semibold tracking-wider text-sm uppercase">
               Your Ultimate Anime Database
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight animate-fade-in-up">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight animate-fade-in-up drop-shadow-2xl">
             <span className="text-white">Bonkey</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 ml-4">
               Stream
             </span>
           </h1>
           
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-relaxed animate-fade-in-up delay-100">
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-relaxed animate-fade-in-up delay-100 drop-shadow-md">
             Dive into an immersive anime library. Discover thousands of titles, track your progress, and explore the community.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-200">
-            <button className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 w-full sm:w-auto">
+            <button className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-cyan-500/25 w-full sm:w-auto hover:shadow-cyan-400/40">
               Browse Database
             </button>
-            <Link href="/genre" className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md text-white font-semibold rounded-xl border border-white/10 transition-all hover:scale-105 w-full sm:w-auto text-center">
+            <Link href="/genre" className="px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md text-white font-semibold rounded-xl border border-white/10 transition-all hover:scale-105 w-full sm:w-auto text-center hover:border-white/20 shadow-lg shadow-black/20">
               Explore Genres
             </Link>
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-slate-500 rounded-full flex justify-center p-1">
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
+          <div className="w-6 h-10 border-2 border-slate-500/50 rounded-full flex justify-center p-1">
             <div className="w-1 h-2 bg-cyan-400 rounded-full animate-scroll-down" />
           </div>
         </div>

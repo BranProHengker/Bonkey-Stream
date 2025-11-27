@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: "Dabes Anime",
+  title: "Bonkey Stream",
   description: "Si Paling Wibu",
 };
 

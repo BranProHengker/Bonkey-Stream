@@ -30,6 +30,18 @@ export default function AuthPage() {
     <div className="min-h-screen flex bg-slate-900">
       {/* Left Side: Form Section */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 relative z-10 bg-slate-900">
+        
+        {/* Skip Button */}
+        <button 
+          onClick={() => router.push('/home')}
+          className="absolute top-6 right-6 text-slate-400 hover:text-cyan-400 text-sm font-medium transition-colors flex items-center gap-2 group z-50"
+        >
+          Skip Login
+          <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center lg:text-left animate-fade-in">
@@ -219,7 +231,8 @@ export default function AuthPage() {
 
       {/* Right Side: Image/Banner Section */}
       <div className="hidden lg:block w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-l from-transparent to-slate-900/90 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-transparent to-transparent z-20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent z-10" />
         <div className="absolute inset-0 bg-cyan-900/20 mix-blend-overlay z-10" />
         
         {/* Background Image */}
@@ -235,28 +248,28 @@ export default function AuthPage() {
         </div>
 
         {/* Content Overlay */}
-        <div className="absolute inset-0 z-20 flex flex-col justify-end p-16 pb-24">
-          <div className="max-w-lg space-y-6 animate-slide-up" style={{ animationDelay: "0.3s" }}>
-            <div className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/30 backdrop-blur-md">
+        <div className="absolute inset-0 z-30 flex flex-col justify-center items-center text-center p-12">
+          <div className="max-w-lg space-y-8 animate-slide-up" style={{ animationDelay: "0.3s" }}>
+            <div className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-400/30 backdrop-blur-md shadow-lg shadow-cyan-500/10">
               <span className="text-cyan-300 text-sm font-semibold tracking-wide uppercase">Ultimate Anime Database</span>
             </div>
-            <h2 className="text-5xl font-bold text-white leading-tight">
+            <h2 className="text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-2xl">
               Discover Your Next <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Favorite Anime</span>
             </h2>
-            <p className="text-lg text-slate-300 leading-relaxed">
+            <p className="text-lg text-slate-200 leading-relaxed drop-shadow-md max-w-md mx-auto">
               Join thousands of anime enthusiasts. Explore your favorite anime, track your progress, and connect with the community.
             </p>
             
             {/* Stats */}
-            <div className="flex gap-8 pt-4">
-              <div>
-                <p className="text-3xl font-bold text-white">10k+</p>
-                <p className="text-sm text-slate-400">Anime Titles</p>
+            <div className="flex justify-center gap-12 pt-4">
+              <div className="text-center">
+                <p className="text-4xl font-bold text-white drop-shadow-lg">10k+</p>
+                <p className="text-sm text-cyan-200 font-medium uppercase tracking-wider">Anime Titles</p>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-white">100%</p>
-                <p className="text-sm text-slate-400">Free Access</p>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-white drop-shadow-lg">100%</p>
+                <p className="text-sm text-cyan-200 font-medium uppercase tracking-wider">Free Access</p>
               </div>
             </div>
           </div>

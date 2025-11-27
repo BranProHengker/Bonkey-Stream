@@ -1,24 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
-import { Anime } from "@/app/types/anime"
-import AnimeModal from "@/app/components/AnimeModal"
+import NavbarSearch from "@/app/components/NavbarSearch"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<Anime[]>([])
-  const [isSearching, setIsSearching] = useState(false)
   const [theme, setTheme] = useState<"dark" | "light">("dark")
-  const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null)
   
   const pathname = usePathname()
-  const searchRef = useRef<HTMLDivElement>(null)
 
   // Handle Scroll Effect
   useEffect(() => {
@@ -60,75 +53,6 @@ export default function Navbar() {
     } else {
       document.documentElement.classList.remove("dark")
     }
-  }
-
-  // Handle Search Click Outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsSearchOpen(false)
-        setSearchResults([])
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
-
-  // Handle Search Logic
-  const mobileInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (isSearchOpen && window.innerWidth < 768) {
-      setTimeout(() => {
-        mobileInputRef.current?.focus()
-      }, 100)
-    }
-  }, [isSearchOpen])
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
-      if (searchQuery.length > 2) {
-        setIsSearching(true)
-        try {
-          const res = await fetch(`https://api.jikan.moe/v4/anime?q=${searchQuery}&limit=5`)
-          const data = await res.json()
-          
-          // Map results to ensure they fit Anime interface roughly or cast them
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const mappedResults = (data.data || []).map((item: any) => ({
-            mal_id: item.mal_id,
-            title: item.title,
-            title_english: item.title_english,
-            images: item.images,
-            synopsis: item.synopsis,
-            type: item.type,
-            episodes: item.episodes,
-            status: item.status,
-            score: item.score,
-            rating: item.rating,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            genres: item.genres?.map((g: any) => ({ mal_id: g.mal_id, name: g.name })) || [],
-            aired: item.aired,
-          })) as Anime[]
-
-          setSearchResults(mappedResults)
-        } catch (error) {
-          console.error("Search error:", error)
-        } finally {
-          setIsSearching(false)
-        }
-      } else {
-        setSearchResults([])
-      }
-    }, 500)
-
-    return () => clearTimeout(delayDebounceFn)
-  }, [searchQuery])
-
-  const handleAnimeClick = (anime: Anime) => {
-    setSelectedAnime(anime)
-    setIsSearchOpen(false)
-    setSearchQuery("")
   }
 
   const navLinks = [
@@ -184,79 +108,8 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Search Bar */}
-              <div ref={searchRef} className="relative flex items-center">
-                <div
-                  className={`flex items-center overflow-hidden transition-all duration-300 ${
-                    isSearchOpen ? "w-64 opacity-100" : "w-0 opacity-0"
-                  }`}
-                >
-                  <input
-                    type="text"
-                    placeholder="Search anime..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 px-4 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    setIsSearchOpen(!isSearchOpen)
-                    if (!isSearchOpen) setTimeout(() => document.querySelector<HTMLInputElement>("input[type='text']")?.focus(), 100)
-                  }}
-                  className={`p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
-                    isSearchOpen ? "text-cyan-500" : "text-slate-600 dark:text-slate-300"
-                  }`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-
-                {/* Search Dropdown */}
-                {isSearchOpen && searchQuery.length > 2 && (
-                  <div className="absolute top-full right-0 mt-3 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden max-h-96 overflow-y-auto z-50">
-                    {isSearching ? (
-                      <div className="p-4 text-center text-sm text-slate-500">Searching...</div>
-                    ) : searchResults.length > 0 ? (
-                      <div className="py-2">
-                        {searchResults.map((anime) => (
-                          <div
-                            key={anime.mal_id}
-                            className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 cursor-pointer transition-colors"
-                            onClick={() => handleAnimeClick(anime)}
-                          >
-                            <div className="w-12 h-16 relative flex-shrink-0 rounded-md overflow-hidden bg-slate-200 dark:bg-slate-800">
-                              <Image 
-                                src={anime.images.jpg.image_url || "/placeholder.svg"} 
-                                alt={anime.title} 
-                                fill 
-                                sizes="48px"
-                                className="object-cover"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-semibold text-slate-800 dark:text-white line-clamp-1">{anime.title}</h4>
-                              <div className="flex items-center text-xs text-slate-500 mt-1">
-                                <span className="mr-2 px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-[10px] border border-slate-200 dark:border-slate-700">
-                                  {anime.type || "TV"}
-                                </span>
-                                {anime.score && (
-                                  <span className="flex items-center text-yellow-500 font-medium">
-                                    ★ {anime.score}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-4 text-center text-sm text-slate-500">No results found</div>
-                    )}
-                  </div>
-                )}
-              </div>
+              {/* Search Bar (Desktop) */}
+              <NavbarSearch />
 
               {/* Theme Toggle */}
               <button
@@ -279,23 +132,11 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-4">
               {/* Mobile Search Toggle */}
-              <button
-                onClick={() => {
-                  setIsSearchOpen(!isSearchOpen)
-                  setIsOpen(false) // Close menu if open
-                }}
-                className="text-slate-600 dark:text-slate-300"
-                aria-label="Toggle Search"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
+              <NavbarSearch />
 
               <button
                 onClick={() => {
                   setIsOpen(!isOpen)
-                  setIsSearchOpen(false) // Close search if open
                 }}
                 className="text-slate-600 dark:text-slate-300 focus:outline-none p-2"
                 aria-label="Toggle Menu"
@@ -308,62 +149,6 @@ export default function Navbar() {
               </button>
             </div>
           </div>
-
-          {/* Mobile Search Input (Expandable) */}
-          <div 
-            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-              isSearchOpen ? "max-h-20 opacity-100 mt-4" : "max-h-0 opacity-0"
-            }`}
-          >
-             <input
-                ref={mobileInputRef}
-                type="text"
-                placeholder="Search anime..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg py-3 px-4 text-base text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50 shadow-inner"
-              />
-          </div>
-              
-          {/* Mobile Search Results - Rendered outside overflow-hidden container */}
-          {isSearchOpen && searchQuery.length > 2 && (
-            <div className="md:hidden mt-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xl max-h-[60vh] overflow-y-auto absolute left-4 right-4 z-50">
-              {isSearching ? (
-                <div className="p-4 text-center text-sm text-slate-500">Searching...</div>
-              ) : searchResults.length > 0 ? (
-                <div>
-                  {searchResults.map((anime) => (
-                    <div
-                      key={anime.mal_id}
-                      className="px-4 py-3 border-b border-slate-100 dark:border-white/5 last:border-0 flex items-center gap-3 active:bg-slate-100 dark:active:bg-slate-800 transition-colors"
-                      onClick={() => handleAnimeClick(anime)}
-                    >
-                      <div className="w-12 h-16 relative flex-shrink-0 rounded-md overflow-hidden bg-slate-200 dark:bg-slate-800">
-                        <Image 
-                          src={anime.images.jpg.image_url} 
-                          alt={anime.title} 
-                          fill 
-                          sizes="48px"
-                          className="object-cover" 
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-base font-semibold text-slate-800 dark:text-white line-clamp-1">{anime.title}</h4>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-yellow-500 font-medium">★ {anime.score || "N/A"}</span>
-                          <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 text-slate-500">
-                            {anime.type || "TV"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-4 text-center text-sm text-slate-500">No results found</div>
-              )}
-            </div>
-          )}
 
           {/* Mobile Menu Dropdown */}
           <div
@@ -407,9 +192,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-
-      {/* Global Modal */}
-      <AnimeModal anime={selectedAnime} onClose={() => setSelectedAnime(null)} />
     </>
   )
 }
+
