@@ -1,5 +1,5 @@
 {
-  "name": "learn-njs",
+  "name": "bonkey-stream",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -13,7 +13,7 @@
     "vercel-build": "next build"
   },
   "dependencies": {
-    "next": "^16.0.4",
+    "next": "16.0.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
