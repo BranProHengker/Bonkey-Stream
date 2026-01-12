@@ -5,6 +5,7 @@ import Footer from "@/app/components/Footer"
 import LoadingPage from "@/app/components/LoadingPage"
 import AnimeModal from "@/app/components/AnimeModal"
 import AnimeCard from "@/app/components/AnimeCard"
+import ContinueWatching from "@/app/components/ContinueWatching"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -128,6 +129,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Continue Watching Section */}
+      <ContinueWatching />
 
       {/* Trending Section */}
       <section className="py-20 relative">

@@ -61,6 +61,7 @@ export default function Navbar() {
     { name: "Genres", path: "/genre" },
     { name: "Upcoming", path: "/upcoming" },
     { name: "Stream", path: "/stream" },
+    { name: "History", path: "/history" },
   ]
 
   return (

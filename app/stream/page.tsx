@@ -1,4 +1,4 @@
-import { searchAnime, getOngoing, AnimeResult, Pagination } from "@/app/services/animeApi";
+import { searchAnime, getHome, AnimeResult, Pagination } from "@/app/services/animeApi";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
@@ -13,7 +13,7 @@ export default async function StreamPage({
   const currentPage = Number(page) || 1;
   let results: AnimeResult[] = [];
   let pagination: Pagination | undefined;
-  let title = "Ongoing Anime";
+  let title = "Latest Updated Anime";
 
   if (q) {
     title = `Search Results for "${q}"`;
@@ -23,10 +23,12 @@ export default async function StreamPage({
          pagination = searchData.pagination;
     }
   } else {
-    const ongoingData = await getOngoing(currentPage);
-    if (ongoingData && ongoingData.data) {
-        results = ongoingData.data;
-        pagination = ongoingData.pagination;
+    // Use home endpoint to get latest updated anime
+    const homeData = await getHome();
+    if (homeData && homeData.data) {
+        results = homeData.data;
+        // Home endpoint typically doesn't have pagination, so we set it to undefined
+        pagination = undefined;
     }
   }
 
@@ -58,13 +60,13 @@ export default async function StreamPage({
             </div>
         ) : (
             <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                 {results.map((anime, idx) => (
                     <Link 
                         href={`/stream/${anime.slug}`} 
                         key={idx} 
-                        className="group relative flex flex-col bg-slate-900/50 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 border border-slate-800/50 hover:border-cyan-500/30 hover:-translate-y-1 animate-fade-in-up"
-                        style={{ animationDelay: `${idx * 50}ms` }}
+                        className="group relative flex flex-col bg-slate-900/50 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 border border-slate-800/50 hover:border-cyan-500/30 hover:-translate-y-1"
+                        style={{ animationDelay: `${Math.min(idx * 30, 300)}ms` }}
                     >
                         <div className="relative aspect-[2/3] overflow-hidden bg-slate-800">
                             <Image
@@ -73,6 +75,8 @@ export default async function StreamPage({
                                 fill
                                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                                 className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out"
+                                loading="lazy"
+                                quality={85}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
                             

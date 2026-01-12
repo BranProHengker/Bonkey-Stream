@@ -12,11 +12,15 @@ interface NavbarSearchProps {
   onClose?: () => void
 }
 
+const STORAGE_KEY = "anime_recent_searches"
+const MAX_RECENT_SEARCHES = 10
+
 export default function NavbarSearch({ onClose }: NavbarSearchProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<AnimeResult[]>([])
   const [loading, setLoading] = useState(false)
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const pathname = usePathname()
 
@@ -27,6 +31,36 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
     setResults([])
     if (onClose) onClose()
   }, [pathname, onClose])
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored)
+          setRecentSearches(Array.isArray(parsed) ? parsed : [])
+        } catch {
+          setRecentSearches([])
+        }
+      }
+    }
+  }, [])
+
+  // CTRL+K / CMD+K keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault()
+        setIsOpen(true)
+      }
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isOpen])
 
   // Focus input when opened
   useEffect(() => {
@@ -48,6 +82,16 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
       const res = await searchAnime(searchQuery)
       if (res && res.data) {
         setResults(res.data)
+        // Save to recent searches
+        const trimmedQuery = searchQuery.trim()
+        setRecentSearches((prev) => {
+          const filtered = prev.filter((item) => item.toLowerCase() !== trimmedQuery.toLowerCase())
+          const updated = [trimmedQuery, ...filtered].slice(0, MAX_RECENT_SEARCHES)
+          if (typeof window !== "undefined") {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+          }
+          return updated
+        })
       } else {
         setResults([])
       }
@@ -57,6 +101,11 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleRecentSearchClick = (searchTerm: string) => {
+    setQuery(searchTerm)
+    handleSearch(searchTerm)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -112,10 +161,34 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
                 </svg>
             </button>
         </div>
-        <div className="max-w-4xl mx-auto mt-2 text-xs text-slate-500 flex gap-4">
+        <div className="max-w-4xl mx-auto mt-2 text-xs text-slate-500 flex flex-wrap gap-4">
             <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Enter</kbd> to search</span>
             <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Esc</kbd> to close</span>
+            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Ctrl+K</kbd> to open search</span>
         </div>
+        
+        {/* Recent Searches */}
+        {recentSearches.length > 0 && !loading && !query.trim() && (
+          <div className="max-w-4xl mx-auto mt-4">
+            <div className="flex items-center gap-2 mb-3">
+              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-sm font-medium text-slate-400">Recent Searches</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {recentSearches.map((searchTerm, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleRecentSearchClick(searchTerm)}
+                  className="px-4 py-2 text-sm text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 hover:border-cyan-400/50 rounded-full transition-colors hover:text-cyan-400"
+                >
+                  {searchTerm}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Results Area */}

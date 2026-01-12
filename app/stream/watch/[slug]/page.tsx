@@ -1,11 +1,13 @@
 "use client"
 
 import { getEpisode, EpisodeDetail } from "@/app/services/animeApi";
+import { getAnimeDetail } from "@/app/services/animeApi";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import LoadingPage from "@/app/components/LoadingPage";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { addToWatchHistory, updateWatchProgress, getWatchHistory } from "@/app/utils/storage";
 
 export default function WatchPage({
   params,
@@ -15,21 +17,118 @@ export default function WatchPage({
   const [episode, setEpisode] = useState<EpisodeDetail | null>(null);
   const [currentServer, setCurrentServer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [slug, setSlug] = useState<string>("");
+  const [animeTitle, setAnimeTitle] = useState<string>("");
+  const [animePoster, setAnimePoster] = useState<string>("");
+  const [animeSlug, setAnimeSlug] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    params.then((resolvedParams) => {
+    params.then(async (resolvedParams) => {
         setSlug(resolvedParams.slug);
-        getEpisode(resolvedParams.slug).then((data) => {
-            if (data?.data) {
-                setEpisode(data.data);
-                setCurrentServer(data.data.stream_url);
+        const episodeData = await getEpisode(resolvedParams.slug);
+        if (episodeData?.data) {
+            setEpisode(episodeData.data);
+            setCurrentServer(episodeData.data.stream_url);
+            
+            // Extract anime slug from episode slug
+            // Format: animeSlug-episodeNumber or kura-id-slug-episode
+            const slugParts = resolvedParams.slug.split("-");
+            let extractedAnimeSlug = resolvedParams.slug;
+            if (resolvedParams.slug.startsWith("kura-")) {
+                // For kuramanime: kura-id-slug-episode -> kura-id-slug
+                extractedAnimeSlug = slugParts.slice(0, -1).join("-");
+            } else {
+                // For samehadaku: animeSlug-episodeNumber -> animeSlug
+                const lastPart = slugParts[slugParts.length - 1];
+                if (!isNaN(Number(lastPart))) {
+                    extractedAnimeSlug = slugParts.slice(0, -1).join("-");
+                }
             }
-            setLoading(false);
-        }); 
+            
+            setAnimeSlug(extractedAnimeSlug);
+            
+            // Fetch anime detail for title and poster
+            try {
+                const animeData = await getAnimeDetail(extractedAnimeSlug);
+                if (animeData?.data) {
+                    setAnimeTitle(animeData.data.title);
+                    setAnimePoster(animeData.data.poster);
+                }
+            } catch (error) {
+                console.error("Error fetching anime detail:", error);
+            }
+        }
+        setLoading(false);
     });
   }, [params]);
+
+  // Track video progress and save to history
+  useEffect(() => {
+    // Save to history immediately when page loads (for both video and iframe)
+    if (animeTitle && animePoster && animeSlug && episode) {
+      addToWatchHistory({
+        animeSlug,
+        animeTitle,
+        animePoster,
+        episodeSlug: slug,
+        episodeTitle: episode.title || "Episode",
+        progress: 0,
+        duration: 0,
+        currentTime: 0,
+      });
+    }
+  }, [slug, animeTitle, animePoster, animeSlug, episode]);
+
+  // Track video progress for MP4 videos only
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !animeTitle || !animeSlug) return;
+
+    const handleTimeUpdate = () => {
+      if (video.duration) {
+        const progress = (video.currentTime / video.duration) * 100;
+        updateWatchProgress(
+          slug,
+          progress,
+          video.currentTime,
+          video.duration
+        );
+      }
+    };
+
+    const handleLoadedMetadata = () => {
+      // Check if there's existing progress
+      const history = getWatchHistory();
+      const existing = history.find((h) => h.episodeSlug === slug);
+      if (existing && existing.currentTime > 10) {
+        // Resume from saved position if more than 10 seconds
+        video.currentTime = existing.currentTime;
+      }
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [slug, animeTitle, animeSlug]);
+
+  // Share functionality
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+    }
+  };
 
   const handleServerChange = async (serverId: string) => {
       // If serverId is a URL (for Kuramanime), set it directly
@@ -123,12 +222,13 @@ export default function WatchPage({
                 </div>
             </div>
 
-            <div className="aspect-video w-full bg-black rounded-2xl overflow-hidden shadow-2xl shadow-cyan-500/10 border border-slate-800 relative ring-1 ring-white/10">
+            <div className="aspect-video w-full bg-black rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl shadow-cyan-500/10 border border-slate-800 relative ring-1 ring-white/10">
                 {loading ? (
                     <LoadingPage />
                 ) : currentServer ? (
                     currentServer.includes('.mp4') ? (
                         <video 
+                            ref={videoRef}
                             src={currentServer} 
                             className="w-full h-full" 
                             controls
@@ -191,38 +291,99 @@ export default function WatchPage({
                 </div>
             )}
 
-            <div className="mt-12">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Download Options
-                </h3>
-                
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {episode.download_urls?.map((group, idx) => (
-                        <div key={idx} className="bg-slate-900 rounded-xl border border-slate-800 p-5 hover:border-cyan-500/30 transition-colors group">
-                            <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-2 group-hover:border-slate-700 transition-colors">
-                                <span className="font-bold text-cyan-400">{group.quality}</span>
-                                <span className="text-xs px-2 py-1 bg-slate-800 rounded text-slate-400 border border-slate-700">Video</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                                {group.links.map((link, linkIdx) => (
-                                    <a 
-                                        key={linkIdx}
-                                        href={link.url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-xs text-center py-2 px-3 bg-slate-800 hover:bg-cyan-600 text-slate-300 hover:text-white rounded-lg transition-all border border-slate-700 hover:border-cyan-500"
-                                    >
-                                        {link.provider}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+            {/* Download Section - Organized Design */}
+            {episode.download_urls && episode.download_urls.length > 0 && (
+                <div className="mt-6 bg-slate-900/80 rounded-lg border border-slate-800 overflow-hidden">
+                    {/* Header */}
+                    <div className="bg-slate-800/50 px-3 py-2 border-b border-slate-700">
+                        <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                            <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>TAUTAN UNDUH</span>
+                            <span className="text-red-400">NF</span>
+                        </h3>
+                    </div>
+
+                    {/* Download Options */}
+                    <div className="divide-y divide-slate-800">
+                        {episode.download_urls.map((group, idx) => {
+                            // Parse quality string - handle formats like:
+                            // "MKV 480p (Softsub) - (504.40 MB)"
+                            // "MP4 720p (Hardsub) - (1.18 GB)"
+                            // Or simple format like "Format - Quality"
+                            const qualityStr = group.quality;
+                            let format = '';
+                            let resolution = '';
+                            let subtitleType = '';
+                            let size = '';
+
+                            // Try to extract format (MKV/MP4)
+                            const formatMatch = qualityStr.match(/\b(MKV|MP4)\b/i);
+                            if (formatMatch) format = formatMatch[1].toUpperCase();
+
+                            // Try to extract resolution (480p, 720p, 1080p, etc)
+                            const resMatch = qualityStr.match(/\b(\d+p)\b/i);
+                            if (resMatch) resolution = resMatch[1];
+
+                            // Try to extract subtitle type (Softsub/Hardsub)
+                            const subMatch = qualityStr.match(/\((\w+sub)\)/i);
+                            if (subMatch) subtitleType = subMatch[1];
+
+                            // Try to extract size
+                            const sizeMatch = qualityStr.match(/\(([^)]+)\)/g);
+                            if (sizeMatch && sizeMatch.length > 0) {
+                                // Get the last match which is usually the size
+                                const lastMatch = sizeMatch[sizeMatch.length - 1];
+                                size = lastMatch.replace(/[()]/g, '');
+                            }
+
+                            // Fallback: if parsing fails, use original string
+                            const displayQuality = format && resolution 
+                                ? `${format} ${resolution}${subtitleType ? ` (${subtitleType})` : ''}${size ? ` - (${size})` : ''}`
+                                : qualityStr;
+
+                            return (
+                                <div key={idx} className="px-3 py-2.5 hover:bg-slate-800/30 transition-colors">
+                                    {/* Quality Header */}
+                                    <div className="mb-2">
+                                        <h4 className="text-xs font-semibold text-white leading-tight">
+                                            {format && resolution ? (
+                                                <>
+                                                    <span className="text-cyan-400">{format} {resolution}</span>
+                                                    {subtitleType && (
+                                                        <span className="text-slate-400"> ({subtitleType})</span>
+                                                    )}
+                                                    {size && (
+                                                        <span className="text-slate-500 ml-1.5">- ({size})</span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <span className="text-cyan-400">{displayQuality}</span>
+                                            )}
+                                        </h4>
+                                    </div>
+
+                                    {/* Provider Buttons */}
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {group.links.map((link, linkIdx) => (
+                                            <a
+                                                key={linkIdx}
+                                                href={link.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="px-2.5 py-1 text-[11px] font-medium bg-slate-800 hover:bg-cyan-600 text-slate-300 hover:text-white rounded transition-all border border-slate-700 hover:border-cyan-500 active:scale-95"
+                                            >
+                                                {link.provider}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
       </div>
       <Footer />

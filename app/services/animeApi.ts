@@ -92,12 +92,12 @@ export interface EpisodeDetail {
   }[];
 }
 
-export const getHome = async () => {
+export const getHome = async (): Promise<{ status: string; data: AnimeResult[] } | null> => {
   try {
     const res = await fetch(`${BASE_URL}/home`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error("Failed to fetch home");
     const json = await res.json();
-    // Return recent anime list
+    // Return recent anime list with full AnimeResult format
     return {
         status: json.status,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,7 +106,12 @@ export const getHome = async () => {
             slug: anime.animeId,
             poster: anime.poster,
             episodes: anime.episodes,
-            releasedOn: anime.releasedOn
+            releasedOn: anime.releasedOn,
+            status: anime.status,
+            score: anime.score,
+            type: anime.type,
+            genreList: anime.genreList,
+            source: 'samehadaku' as const
         })) || []
     };
   } catch (error) {

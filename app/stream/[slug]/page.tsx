@@ -1,6 +1,7 @@
 import { getAnimeDetail } from "@/app/services/animeApi";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import AnimeActions from "@/app/components/AnimeActions";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -55,6 +56,8 @@ export default async function StreamDetailPage({
                     fill
                     sizes="(max-width: 768px) 100vw, 300px"
                     className="object-cover"
+                    priority
+                    quality={90}
                 />
             </div>
             
@@ -89,17 +92,24 @@ export default async function StreamDetailPage({
                     ))}
                 </div>
 
-                {anime.batch && (
-                    <Link 
-                        href={`/stream/batch/${anime.batch.batchId}`}
-                        className="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/20"
-                    >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Download Batch
-                    </Link>
-                )}
+                <div className="flex flex-wrap items-center gap-4">
+                    <AnimeActions 
+                        animeSlug={slug}
+                        animeTitle={anime.title}
+                        animePoster={anime.poster}
+                    />
+                    {anime.batch && (
+                        <Link 
+                            href={`/stream/batch/${anime.batch.batchId}`}
+                            className="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/20"
+                        >
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download Batch
+                        </Link>
+                    )}
+                </div>
             </div>
         </div>
       </div>
@@ -131,7 +141,7 @@ export default async function StreamDetailPage({
                             <Link 
                                 href={`/stream/watch/${ep.slug}`} 
                                 key={ep.slug}
-                                className="flex items-center p-4 bg-slate-900/50 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/30 rounded-xl transition-all group"
+                                className="flex items-center p-4 bg-slate-900/50 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/30 rounded-xl transition-all duration-300 group hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/10"
                             >
                                 <div className="flex-shrink-0 w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-cyan-500 font-bold group-hover:bg-cyan-500 group-hover:text-black transition-colors">
                                     {ep.title}

@@ -145,12 +145,6 @@ export default function Footer() {
                 </Link>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="px-2 py-1 bg-gray-800 rounded-md text-xs text-gray-300 border border-gray-700">
-                v2.1.0
-              </span>
-              <span className="text-xs text-gray-400">Built with Next.js</span>
-            </div>
           </div>
         </div>
       </div>
