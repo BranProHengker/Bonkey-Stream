@@ -50,7 +50,7 @@ export default function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Community</h3>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Features</h3>
             <ul className="space-y-3">
               <li>
                 <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
@@ -66,16 +66,6 @@ export default function Footer() {
                 <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors duration-200">
                   Watchlists
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="https://sociabuzz.com/br4nzet/tribe"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                >
-                  Support Us
-                </a>
               </li>
             </ul>
           </div>

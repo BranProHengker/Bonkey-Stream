@@ -222,7 +222,7 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
                                     No Image
                                 </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-100 group-hover:opacity-100 transition-opacity" />
                             <div className="absolute bottom-0 left-0 right-0 p-4">
                                 <h3 className="text-white font-bold text-sm line-clamp-2 leading-tight group-hover:text-cyan-400 transition-colors">
                                     {anime.title}

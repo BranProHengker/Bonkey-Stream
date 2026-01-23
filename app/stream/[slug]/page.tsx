@@ -134,12 +134,12 @@ export default async function StreamDetailPage({
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
                         <span className="w-1 h-8 bg-cyan-500 rounded-full mr-3"></span>
-                        Episodes
+                        Daftar Episode
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {anime.episode_lists?.map((ep) => (
-                            <Link 
-                                href={`/stream/watch/${ep.slug}`} 
+                            <Link
+                                href={`/stream/watch/${ep.slug}`}
                                 key={ep.slug}
                                 className="flex items-center p-4 bg-slate-900/50 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/30 rounded-xl transition-all duration-300 group hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/10"
                             >
@@ -148,9 +148,11 @@ export default async function StreamDetailPage({
                                 </div>
                                 <div className="ml-4 flex-1 min-w-0">
                                     <h4 className="text-sm font-medium text-slate-200 group-hover:text-white truncate transition-colors">
-                                        Episode {ep.title}
+                                        Watch Now
                                     </h4>
-                                    <p className="text-xs text-slate-500 mt-0.5">Watch Now</p>
+                                    <p className="text-xs text-slate-400 mt-0.5">
+                                        {anime.aired ? `Released: ${anime.aired}` : 'Release date unknown'} • {anime.status || 'Status unknown'}
+                                    </p>
                                 </div>
                                 <div className="ml-2 text-slate-600 group-hover:text-cyan-400">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,13 +168,6 @@ export default async function StreamDetailPage({
             
             <div className="space-y-8">
                 {/* Sidebar Content (Optional: Related Anime, etc) */}
-                <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl border border-slate-700/50 sticky top-24">
-                    <h3 className="text-lg font-bold text-white mb-4">Support Us</h3>
-                    <p className="text-sm text-slate-400 mb-4">Enjoying the content? Support the server maintenance!</p>
-                    <a href="https://sociabuzz.com/br4nzet/tribe" target="_blank" rel="noreferrer" className="block w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white text-center rounded-xl font-semibold transition-colors">
-                        Donate
-                    </a>
-                </div>
             </div>
         </div>
       </div>
