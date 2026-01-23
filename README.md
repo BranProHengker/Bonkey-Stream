@@ -1,4 +1,4 @@
-# Bonkey Stream 🐵📺
+# Bonkey Stream 📺
 
 A modern, responsive, and ad-free Anime Streaming Platform built with **Next.js 16**. 
 Bonkey Stream offers a premium streaming experience with a beautiful dark-themed UI, multi-source support, and batch downloads.
