@@ -54,7 +54,7 @@ export default function PopularPage() {
   if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30 selection:text-cyan-100">
+    <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
       <Navbar />
 
       <section className="relative h-[65vh] overflow-hidden flex items-center justify-center">
@@ -63,35 +63,33 @@ export default function PopularPage() {
           alt="Popular Anime Hero"
           fill
           style={{ objectFit: "cover" }}
-          className="opacity-50"
+          className="opacity-30"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/60 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-bg-dark/60 to-bg-dark" />
         
         <div className="relative z-10 text-center">
-          <div className="inline-block p-3 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-6 animate-bounce">
-            <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-          </div>
-          <h1 className="text-4xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg animate-fade-in-up">
-            Hall of <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Fame</span>
+          <span className="text-periwinkle text-xs font-semibold tracking-[0.2em] uppercase mb-4 block opacity-80">
+            Community Favorites
+          </span>
+          <h1 className="text-4xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg animate-fade-in-up tracking-tight">
+            Don't be Karbit People
           </h1>
-          <p className="text-lg text-slate-300 animate-fade-in-up delay-100">
+          <p className="text-lg text-periwinkle animate-fade-in-up delay-100 font-light">
             The highest-rated anime of all time, voted by the community.
           </p>
         </div>
       </section>
 
-      <section className="py-12 container mx-auto px-4 relative z-20 -mt-20">
-        <div className="bg-slate-900/50 backdrop-blur-xl rounded-3xl p-8 border border-white/5 shadow-2xl">
+      <section className="py-12 container mx-auto px-4 relative z-20 -mt-20 max-w-7xl">
+        <div className="bg-bg-card/50 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
           {loadingPopular ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4" />
-              <p className="text-slate-400">Calculating rankings...</p>
+              <div className="w-10 h-10 rounded-full border-2 border-indigo border-t-transparent animate-spin mb-4" />
+              <p className="text-periwinkle font-light">Calculating rankings...</p>
             </div>
           ) : popularAnime.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {popularAnime.map((anime, index) => (
                 <div key={anime.mal_id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                   <AnimeCard 
@@ -103,7 +101,7 @@ export default function PopularPage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-slate-400">No data available.</p>
+            <p className="text-center text-periwinkle">No data available.</p>
           )}
         </div>
       </section>

@@ -121,10 +121,10 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
   const triggerButton = (
     <button
       onClick={() => setIsOpen(true)}
-      className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-300"
+      className="p-2 rounded-full hover:bg-slate/50 transition-colors text-periwinkle hover:text-white"
       aria-label="Open Search"
     >
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
     </button>
@@ -133,128 +133,122 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
   if (!isOpen) return triggerButton
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col bg-slate-900/95 backdrop-blur-xl animate-in fade-in duration-200">
-      {/* Header / Input Area */}
-      <div className="container mx-auto px-4 pt-6 pb-4">
-        <div className="flex items-center gap-4 max-w-4xl mx-auto">
-            <div className="flex-1 relative group">
-                <svg className="w-6 h-6 absolute left-0 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                    ref={inputRef}
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Search anime..."
-                    className="w-full bg-transparent border-b-2 border-slate-700 focus:border-cyan-400 text-2xl md:text-4xl font-bold text-white placeholder:text-slate-600 py-4 pl-10 md:pl-12 pr-4 outline-none transition-colors"
-                />
-            </div>
-            <button 
-                onClick={() => setIsOpen(false)}
-                className="p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-slate-800"
-            >
-                <span className="sr-only">Close</span>
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="absolute inset-0" onClick={() => setIsOpen(false)}></div>
+      
+      {/* Search Modal */}
+      <div className="relative w-full max-w-3xl bg-bg-popover rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/5 overflow-hidden animate-in slide-in-from-top-4 duration-300">
+        
+        {/* Input Area */}
+        <div className="flex items-center px-6 py-2 border-b border-white/5 bg-bg-card/50">
+          <svg className="w-6 h-6 text-indigo" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search anime..."
+            className="w-full bg-transparent text-xl md:text-2xl font-light text-white placeholder:text-periwinkle py-4 pl-4 pr-4 outline-none"
+          />
+          <button 
+            onClick={() => setIsOpen(false)}
+            className="p-1.5 text-periwinkle hover:text-white transition-colors rounded-lg hover:bg-slate/50 bg-slate/20 border border-white/5 text-xs font-mono"
+          >
+            ESC
+          </button>
         </div>
-        <div className="max-w-4xl mx-auto mt-2 text-xs text-slate-500 flex flex-wrap gap-4">
-            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Enter</kbd> to search</span>
-            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Esc</kbd> to close</span>
-            <span>Press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 font-mono text-slate-300">Ctrl+K</kbd> to open search</span>
+
+        {/* Content Area */}
+        <div className="flex flex-col h-[60vh] max-h-[600px] overflow-hidden">
+          {/* Recent Searches */}
+          {recentSearches.length > 0 && !loading && !query.trim() && (
+            <div className="px-6 py-4 opacity-80 border-b border-white/5 bg-bg-popover">
+              <div className="flex items-center gap-2 mb-3">
+                <svg className="w-4 h-4 text-periwinkle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-xs font-semibold text-periwinkle uppercase tracking-wider">Recent</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {recentSearches.map((searchTerm, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleRecentSearchClick(searchTerm)}
+                    className="px-3 py-1.5 text-sm text-periwinkle bg-slate/30 hover:bg-slate border border-white/5 hover:border-indigo/50 rounded-lg transition-all hover:text-white"
+                  >
+                    {searchTerm}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Results Scroll Area */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar">
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-6 h-6 rounded-full border-2 border-indigo border-t-transparent animate-spin"></div>
+                </div>
+              </div>
+            ) : results.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-8">
+                {results.map((anime) => (
+                  <Link
+                    key={anime.slug}
+                    href={`/stream/${anime.slug}`}
+                    className="group relative aspect-[2/3] rounded-xl overflow-hidden bg-bg-card border border-white/5 shadow-lg transition-transform hover:scale-[1.02] hover:border-indigo/50 focus:outline-none"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {anime.poster ? (
+                      <Image 
+                        src={anime.poster} 
+                        alt={anime.title} 
+                        fill 
+                        className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" 
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-bg-card text-periwinkle text-xs">
+                        No Image
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 transform transition-transform">
+                      <h3 className="text-white font-medium text-xs line-clamp-2 leading-tight">
+                        {anime.title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        {anime.score && (
+                          <span className="text-[9px] font-bold text-white bg-indigo px-1.5 py-0.5 rounded shadow-sm">
+                             {anime.score}
+                          </span>
+                        )}
+                        <span className="text-[9px] font-medium text-periwinkle uppercase tracking-wide">
+                          {anime.type || "Anime"}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : query && !loading ? (
+              <div className="flex flex-col items-center justify-center h-full text-periwinkle">
+                <p className="text-sm font-medium">No results found for "{query}"</p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-periwinkle opacity-50">
+                <svg className="w-12 h-12 mb-3 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p className="text-sm font-light">Type to search the catalog</p>
+              </div>
+            )}
+          </div>
         </div>
         
-        {/* Recent Searches */}
-        {recentSearches.length > 0 && !loading && !query.trim() && (
-          <div className="max-w-4xl mx-auto mt-4">
-            <div className="flex items-center gap-2 mb-3">
-              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="text-sm font-medium text-slate-400">Recent Searches</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {recentSearches.map((searchTerm, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleRecentSearchClick(searchTerm)}
-                  className="px-4 py-2 text-sm text-slate-300 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 hover:border-cyan-400/50 rounded-full transition-colors hover:text-cyan-400"
-                >
-                  {searchTerm}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Results Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-8">
-        <div className="container mx-auto max-w-6xl">
-            {loading ? (
-                <div className="flex items-center justify-center h-64">
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
-                        <p className="text-slate-500 animate-pulse">Searching across dimensions...</p>
-                    </div>
-                </div>
-            ) : results.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                    {results.map((anime) => (
-                        <Link
-                            key={anime.slug}
-                            href={`/stream/${anime.slug}`}
-                            className="group relative aspect-[2/3] rounded-xl overflow-hidden bg-slate-800 ring-1 ring-white/10 shadow-2xl transition-transform hover:scale-105 hover:ring-cyan-400/50 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            {anime.poster ? (
-                                <Image 
-                                    src={anime.poster} 
-                                    alt={anime.title} 
-                                    fill 
-                                    className="object-cover transition-opacity group-hover:opacity-80" 
-                                />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
-                                    No Image
-                                </div>
-                            )}
-                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-100 group-hover:opacity-100 transition-opacity" />
-                            <div className="absolute bottom-0 left-0 right-0 p-4">
-                                <h3 className="text-white font-bold text-sm line-clamp-2 leading-tight group-hover:text-cyan-400 transition-colors">
-                                    {anime.title}
-                                </h3>
-                                <div className="flex items-center gap-2 mt-2">
-                                    {anime.score && (
-                                        <span className="text-[10px] font-bold text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20">
-                                            ★ {anime.score}
-                                        </span>
-                                    )}
-                                    <span className="text-[10px] text-slate-300 bg-slate-700/50 px-1.5 py-0.5 rounded border border-slate-600">
-                                        {anime.type || "Anime"}
-                                    </span>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            ) : query && !loading ? (
-                <div className="flex flex-col items-center justify-center h-64 text-slate-500">
-                    <svg className="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="text-lg font-medium">No results found for "{query}"</p>
-                    <p className="text-sm">Try searching for a different title</p>
-                </div>
-            ) : (
-                 <div className="flex flex-col items-center justify-center h-64 text-slate-600">
-                    <p className="text-xl font-medium text-slate-500">Type to start searching</p>
-                </div>
-            )}
-        </div>
       </div>
     </div>
   )

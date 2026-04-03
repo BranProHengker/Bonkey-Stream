@@ -36,7 +36,6 @@ export default function GenrePage() {
       const data = await response.json()
 
       if (data.data) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedAnime = data.data.map((anime: any) => ({
           mal_id: anime.mal_id,
           title: anime.title,
@@ -74,7 +73,7 @@ export default function GenrePage() {
       fetchAnimeByGenre(selectedGenre, genres[selectedGenre])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, selectedGenre]) // Removed genres and genreAnime dependency loops
+  }, [isLoading, selectedGenre]) 
 
   const handleGenreChange = (genreName: GenreKey) => {
     setSelectedGenre(genreName)
@@ -83,36 +82,39 @@ export default function GenrePage() {
   if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white selection:bg-cyan-500/30 selection:text-cyan-100">
+    <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
       <Navbar />
 
-      {/* Hero / Header Section */}
+      {/* Cinematic Hero with Background Image */}
       <section className="relative h-[50vh] min-h-[300px] overflow-hidden flex items-center justify-center">
-        <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-40" priority />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+        <Image src="/my-kanojo-4.jpeg" alt="Anime Genre" fill style={{ objectFit: "cover" }} className="opacity-30" priority />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/60 to-black/40" />
         
         <div className="relative z-10 text-center px-4 animate-fade-in-up">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
-            Browse by <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Genre</span>
+          <span className="text-periwinkle text-xs font-semibold tracking-[0.2em] uppercase mb-4 block opacity-80">
+            Catalog Explorer
+          </span>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white tracking-tight">
+            Browse by Genre
           </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Find your perfect match. Whether you love heart-pounding action or heartwarming romance, we have it all.
+          <p className="text-base md:text-lg text-periwinkle max-w-xl mx-auto font-light opacity-80">
+            Discover your next favorite series from our curated collection of critically acclaimed anime.
           </p>
         </div>
       </section>
 
-      <section className="py-12 container mx-auto px-4">
-        {/* Tag Cloud Navigation */}
-        <div className="mb-12">
-          <div className="flex flex-wrap justify-center gap-3 p-6 bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/5">
+      <section className="py-12 container mx-auto px-4 max-w-7xl">
+        {/* Cinematic Tag Cloud Navigation */}
+        <div className="mb-16">
+          <div className="flex flex-wrap justify-center gap-2 p-2">
             {Object.keys(genres).map((genre) => (
               <button
                 key={genre}
                 onClick={() => handleGenreChange(genre as GenreKey)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                className={`px-5 py-2.5 rounded text-xs tracking-wider uppercase font-medium transition-all duration-300 ${
                   selectedGenre === genre
-                    ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/25 scale-105 ring-2 ring-cyan-400/50"
-                    : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700"
+                    ? "bg-white text-bg-dark shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                    : "bg-transparent text-periwinkle hover:text-white border border-white/5 hover:border-white/20 hover:bg-white/5"
                 }`}
               >
                 {genre}
@@ -121,23 +123,29 @@ export default function GenrePage() {
           </div>
         </div>
 
-        {/* Content Grid */}
+        {/* Content Section */}
         <div className="min-h-[400px]">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white pl-4 border-l-4 border-cyan-500">
-              {selectedGenre} <span className="text-slate-500 text-lg font-normal ml-2">Top Rated</span>
-            </h2>
-            <div className="hidden sm:block h-px flex-1 bg-gradient-to-r from-cyan-500/50 to-transparent ml-6" />
+          <div className="flex items-end justify-between mb-10 px-2 border-b border-white/5 pb-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                {selectedGenre}
+              </h2>
+            </div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-periwinkle">
+              Top Rated
+            </span>
           </div>
 
           {isLoadingData ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-slate-800/50 rounded-2xl aspect-[3/4] animate-pulse" />
+                <div key={i} className="bg-bg-card rounded-xl aspect-[2/3] border border-white/5 animate-pulse flex items-center justify-center">
+                   <div className="w-8 h-8 rounded-full border-2 border-indigo border-t-transparent animate-spin opacity-50"></div>
+                </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
               {genreAnime[selectedGenre]?.map((anime, index) => (
                 <div key={anime.mal_id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                   <AnimeCard anime={anime} onClick={setSelectedAnime} />
@@ -147,7 +155,12 @@ export default function GenrePage() {
           )}
           
           {!isLoadingData && !genreAnime[selectedGenre]?.length && (
-             <div className="text-center py-20 text-slate-500">No anime found for this genre.</div>
+             <div className="flex flex-col items-center justify-center py-32 text-periwinkle opacity-50">
+               <svg className="w-12 h-12 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+               <div className="text-sm font-light">No content found in this category.</div>
+             </div>
           )}
         </div>
       </section>

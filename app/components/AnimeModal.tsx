@@ -1,4 +1,4 @@
-import Image from "next/image";
+  import Image from "next/image";
 import { Anime } from "@/app/types/anime";
 
 interface AnimeModalProps {
@@ -9,103 +9,132 @@ interface AnimeModalProps {
 export default function AnimeModal({ anime, onClose }: AnimeModalProps) {
   if (!anime) return null;
 
+  const bgImage = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url;
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex justify-center items-center z-50 p-4 transition-all duration-300">
-      <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative shadow-2xl shadow-cyan-500/10">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4 sm:p-6 transition-all duration-300">
+      
+      {/* Click outside to close (Optional invisible overlay) */}
+      <div className="absolute inset-0" onClick={onClose} />
+
+      <div className="relative bg-bg-dark border border-white/10 rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] ring-1 ring-white/5 animate-fade-in-up flex flex-col">
+        
+        {/* Absolute Background Image (Blurred heavily for atmosphere) */}
+        {bgImage && (
+           <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+             <Image 
+                src={bgImage} 
+                alt="Background" 
+                fill 
+                className="object-cover blur-3xl scale-110 saturate-150" 
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/80 to-transparent" />
+             <div className="absolute inset-0 bg-gradient-to-r from-bg-dark via-bg-dark/80 to-transparent" />
+           </div>
+        )}
+
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 z-10 bg-slate-800/50 hover:bg-red-500/20 hover:text-red-400 rounded-full p-2 transition-all duration-200"
+          className="absolute top-5 right-5 text-white/50 z-20 bg-black/40 hover:bg-white hover:text-black rounded-full p-2.5 transition-all duration-300 backdrop-blur-md border border-white/10"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="flex justify-center">
-            <Image
-              src={anime.images.jpg.large_image_url || "/placeholder.svg"}
-              alt={anime.title}
-              width={300}
-              height={400}
-              className="rounded-lg shadow-lg max-w-full h-auto"
-            />
+        {/* Scrollable Content Area */}
+        <div className="relative z-10 flex flex-col md:flex-row overflow-y-auto custom-scrollbar h-full">
+            
+          {/* Left Side: Poster (Sticky) */}
+          <div className="md:w-[40%] p-6 md:p-10 shrink-0 relative flex flex-col items-center justify-start border-b md:border-b-0 md:border-r border-white/5">
+             <div className="relative w-full aspect-[2/3] max-w-[300px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10 mx-auto">
+               <Image
+                 src={bgImage || "/placeholder.svg"}
+                 alt={anime.title}
+                 fill
+                 sizes="(max-width: 768px) 100vw, 300px"
+                 className="object-cover"
+                 priority
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+               
+               {/* Score floating on poster */}
+               {anime.score && (
+                 <div className="absolute bottom-4 right-4 bg-indigo text-white font-bold text-sm px-2.5 py-1 rounded shadow-lg">
+                    ★ {anime.score.toFixed(1)}
+                 </div>
+               )}
+             </div>
+
+             {/* Action Button */}
+             <div className="mt-8 w-full max-w-[300px]">
+                <a 
+                  href={`/stream?q=${encodeURIComponent(anime.title)}`}
+                  className="group relative flex items-center justify-center w-full py-4 px-6 bg-white hover:bg-slate-200 text-bg-dark font-bold rounded-xl transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:-translate-y-1"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  Play Now
+                </a>
+             </div>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">{anime.title}</h2>
-
-            {anime.title_english && anime.title_english !== anime.title && (
-              <p className="text-slate-400">{anime.title_english}</p>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-bold text-blue-400">Type:</span>
-                <span className="ml-2 text-gray-300">{anime.type}</span>
-              </div>
-              <div>
-                <span className="font-bold text-blue-400">Episodes:</span>
-                <span className="ml-2 text-gray-300">{anime.episodes || "Unknown"}</span>
-              </div>
-              <div>
-                <span className="font-bold text-blue-400">Status:</span>
-                <span className="ml-2 text-gray-300">{anime.status}</span>
-              </div>
-              <div>
-                <span className="font-bold text-blue-400">Score:</span>
-                <span className="ml-2 text-gray-300">{anime.score || "N/A"}</span>
-              </div>
-              <div>
-                <span className="font-bold text-blue-400">Aired:</span>
-                <span className="ml-2 text-gray-300">{anime.aired?.string || "Unknown"}</span>
-              </div>
-              <div>
-                <span className="font-bold text-blue-400">Rating:</span>
-                <span className="ml-2 text-gray-300">{anime.rating || "Not available"}</span>
-              </div>
+          {/* Right Side: Details */}
+          <div className="md:w-[60%] p-6 md:p-10 flex flex-col">
+            <div className="mb-2">
+               {anime.title_english && anime.title_english !== anime.title && (
+                 <h3 className="text-periwinkle text-xs font-semibold tracking-[0.15em] uppercase mb-2">
+                   {anime.title_english}
+                 </h3>
+               )}
+               <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+                 {anime.title}
+               </h2>
+               
+               {/* Meta Row */}
+               <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-periwinkle uppercase tracking-wider mb-8">
+                  <span className="flex items-center gap-1.5 px-2.5 py-1 bg-white/5 border border-white/5 rounded">
+                     <span className={`w-1.5 h-1.5 rounded-full ${anime.status === 'Currently Airing' ? 'bg-indigo animate-pulse' : 'bg-white/40'}`} />
+                     {anime.status}
+                  </span>
+                  <span>{anime.type}</span>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span>{anime.episodes ? `${anime.episodes} Episodes` : "Ongoing"}</span>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span>{anime.aired?.string?.split(' to ')[0] || "Unknown"}</span>
+                  {anime.rating && (
+                     <>
+                        <span className="w-1 h-1 rounded-full bg-white/20" />
+                        <span className="border border-periwinkle/30 px-1.5 py-0.5 rounded text-[10px]">{anime.rating.split('-')[0].trim()}</span>
+                     </>
+                  )}
+               </div>
             </div>
 
-            <div className="space-y-2">
-              <p className="font-bold text-blue-400">Synopsis:</p>
-              <div className="text-gray-300 text-sm leading-relaxed max-h-48 overflow-y-auto bg-gray-800 p-4 rounded-lg">
-                {anime.synopsis || "No synopsis available"}
-              </div>
+            {/* Synopsis */}
+            <div className="mb-8">
+              <h4 className="text-white text-sm font-semibold mb-3">Synopsis</h4>
+              <p className="text-periwinkle/90 text-sm md:text-base leading-relaxed font-light">
+                {anime.synopsis || "No synopsis available."}
+              </p>
             </div>
 
+            {/* Genres */}
             {anime.genres && anime.genres.length > 0 && (
-              <div className="space-y-2">
-                <p className="font-bold text-blue-400">Genres:</p>
+              <div className="mt-auto pt-8 border-t border-white/5">
+                <h4 className="text-white text-sm font-semibold mb-3">Genres</h4>
                 <div className="flex flex-wrap gap-2">
                   {anime.genres.map((genre) => (
-                    <span key={genre.mal_id} className="px-3 py-1 bg-blue-600 text-white text-xs rounded-full">
+                    <span key={genre.mal_id} className="px-3 py-1.5 bg-black/40 border border-white/10 text-periwinkle text-xs font-medium rounded-lg hover:text-white hover:border-white/30 transition-colors cursor-default">
                       {genre.name}
                     </span>
                   ))}
                 </div>
               </div>
             )}
-            
-            <div className="pt-6 mt-6 border-t border-slate-700">
-                <a 
-                  href={`/stream?q=${encodeURIComponent(anime.title)}`}
-                  className="inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transform hover:-translate-y-0.5"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Watch Now on Bonkey Stream
-                </a>
-            </div>
           </div>
+
         </div>
       </div>
     </div>

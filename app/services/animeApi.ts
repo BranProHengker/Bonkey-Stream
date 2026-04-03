@@ -123,7 +123,7 @@ export const getHome = async (): Promise<{ status: string; data: AnimeResult[] }
 export const searchAnime = async (query: string, page = 1): Promise<{ status: string; data: AnimeResult[]; pagination?: Pagination } | null> => {
   try {
     // Try Samehadaku first
-    const res = await fetch(`${BASE_URL}/search?q=${encodeURIComponent(query)}&page=${page}`);
+    const res = await fetch(`${BASE_URL}/search?q=${encodeURIComponent(query)}&page=${page}`, { next: { revalidate: 600 } }); // 10min cache
     if (res.ok) {
         const json = await res.json();
         if (json.data?.animeList && json.data.animeList.length > 0) {
@@ -148,7 +148,7 @@ export const searchAnime = async (query: string, page = 1): Promise<{ status: st
     // Fallback to Kuramanime if Samehadaku fails or returns empty
     // Note: Kuramanime might not support pagination in the same way, or we just fetch page 1 for fallback
     if (page === 1) {
-        const kuraRes = await fetch(`https://www.sankavollerei.com/anime/kura/search/${encodeURIComponent(query)}`);
+        const kuraRes = await fetch(`https://www.sankavollerei.com/anime/kura/search/${encodeURIComponent(query)}`, { next: { revalidate: 600 } }); // 10min cache
         if (kuraRes.ok) {
             const kuraJson = await kuraRes.json();
             if (kuraJson.results && kuraJson.results.length > 0) {
@@ -204,7 +204,7 @@ export const getAnimeDetail = async (slug: string): Promise<{ status: string; da
         }
     }
 
-    const res = await fetch(url);
+    const res = await fetch(url, { next: { revalidate: 3600 } }); // 1hr cache - anime details don't change often
     if (!res.ok) throw new Error("Failed to fetch anime detail");
     const json = await res.json();
     const d = json.data;
@@ -282,7 +282,7 @@ export const getAnimeDetail = async (slug: string): Promise<{ status: string; da
 
 export const getBatch = async (slug: string): Promise<{ status: string; data: BatchDetail } | null> => {
   try {
-    const res = await fetch(`${BASE_URL}/batch/${slug}`);
+    const res = await fetch(`${BASE_URL}/batch/${slug}`, { next: { revalidate: 3600 } }); // 1hr cache
     if (!res.ok) throw new Error("Failed to fetch batch");
     return await res.json();
   } catch (error) {
@@ -330,7 +330,7 @@ export const getEpisode = async (slug: string): Promise<{ status: string; data: 
         }
     }
 
-    const res = await fetch(url);
+    const res = await fetch(url, { next: { revalidate: 300 } }); // 5min cache - episode data changes less frequently
     if (!res.ok) throw new Error("Failed to fetch episode");
     const json = await res.json();
     

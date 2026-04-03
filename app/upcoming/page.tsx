@@ -22,10 +22,8 @@ export default function UpcomingPage() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formattedData = (data.data || []).map((anime: any) => ({
         ...anime,
-        // Ensure aired prop structure consistency if needed, mostly Jikan returns it well
       }))
       
-      // Deduplicate anime based on mal_id
       const uniqueAnime = Array.from(new Map(formattedData.map((anime: Anime) => [anime.mal_id, anime])).values())
       
       setUpcomingAnime(uniqueAnime as Anime[])
@@ -46,7 +44,7 @@ export default function UpcomingPage() {
   if (isLoading) return <LoadingPage />
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white selection:bg-green-500/30 selection:text-green-100">
+    <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
       <Navbar />
 
       <section className="relative h-[65vh] overflow-hidden flex items-center justify-start px-4 md:px-20">
@@ -55,60 +53,57 @@ export default function UpcomingPage() {
           alt="Upcoming Anime Hero"
           fill
           style={{ objectFit: "cover" }}
-          className="opacity-50"
+          className="opacity-30"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-bg-dark via-bg-dark/80 to-transparent" />
         
         <div className="relative z-10 max-w-2xl animate-fade-in-up">
           <div className="flex items-center space-x-3 mb-4">
-            <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-green-400 font-mono tracking-widest text-sm uppercase">Coming Soon</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo animate-pulse" />
+            <span className="text-periwinkle font-semibold tracking-[0.2em] text-xs uppercase">Coming Soon</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Next Season's <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
+            Next Season&apos;s <br />
+            <span className="text-periwinkle">
               Big Hits
             </span>
           </h1>
-          <p className="text-lg text-slate-300 border-l-4 border-green-500 pl-6">
+          <p className="text-lg text-periwinkle/80 border-l-2 border-indigo pl-6 font-light">
             Be the first to know. Add these anticipated titles to your watchlist and get ready for the premiere.
           </p>
         </div>
       </section>
 
-      <section className="py-12 container mx-auto px-4">
+      <section className="py-12 container mx-auto px-4 max-w-7xl">
         {/* Timeline Header */}
         <div className="flex items-center mb-12">
-          <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-green-500 mr-4 border border-slate-700 shadow-lg">
+          <div className="w-12 h-12 bg-bg-card rounded-xl flex items-center justify-center text-periwinkle mr-4 border border-white/5 shadow-lg">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Release Calendar</h2>
-            <p className="text-slate-400 text-sm">Upcoming titles sorted by anticipation</p>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Release Calendar</h2>
+            <p className="text-periwinkle/60 text-sm font-light">Upcoming titles sorted by anticipation</p>
           </div>
         </div>
 
         {loadingUpcoming ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-slate-800/50 rounded-2xl aspect-[3/4] animate-pulse" />
+              <div key={i} className="bg-bg-card rounded-xl aspect-[2/3] border border-white/5 animate-pulse" />
             ))}
           </div>
         ) : upcomingAnime.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {upcomingAnime.map((anime, index) => (
               <div key={anime.mal_id} className="relative group animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                {/* Timeline Connector Line (Visual Decoration) */}
-                <div className="absolute -left-4 top-0 bottom-0 w-px bg-gradient-to-b from-slate-700 to-transparent hidden xl:block opacity-30" />
-                
                 <AnimeCard anime={anime} onClick={setSelectedAnime} />
                 
-                {/* Release Date Badge Overwrite style if needed prop anj */}
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="px-3 py-1 bg-green-500/90 backdrop-blur text-white text-xs font-bold rounded-lg shadow-lg">
+                {/* Release Date Badge */}
+                <div className="absolute top-3 left-3 z-20">
+                  <span className="px-2.5 py-1 bg-indigo/90 backdrop-blur text-white text-[10px] font-bold rounded shadow-lg tracking-wider uppercase">
                     {anime.aired?.string?.match(/\d{4}/)?.[0] || "TBA"}
                   </span>
                 </div>
@@ -116,7 +111,7 @@ export default function UpcomingPage() {
             ))}
           </div>
         ) : (
-          <p className="text-lg text-slate-400">No upcoming anime found.</p>
+          <p className="text-lg text-periwinkle/50 font-light">No upcoming anime found.</p>
         )}
       </section>
 
