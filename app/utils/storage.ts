@@ -45,12 +45,18 @@ export const addToWatchHistory = (item: Omit<WatchHistoryItem, "watchedAt">): vo
   if (typeof window === "undefined") return;
   try {
     const history = getWatchHistory();
+    const existing = history.find((h) => h.episodeSlug === item.episodeSlug);
     // Remove existing entry for this episode
     const filtered = history.filter((h) => h.episodeSlug !== item.episodeSlug);
     // Add new entry at the beginning
     const newHistory: WatchHistoryItem[] = [
       {
         ...item,
+        progress: existing ? existing.progress : item.progress,
+        currentTime: existing ? existing.currentTime : item.currentTime,
+        duration: existing ? existing.duration : item.duration,
+        // If animePoster is missing but we had it before, preserve it
+        animePoster: item.animePoster || (existing ? existing.animePoster : ""),
         watchedAt: Date.now(),
       },
       ...filtered,

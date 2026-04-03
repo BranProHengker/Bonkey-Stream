@@ -42,6 +42,9 @@ export default function WatchPage({
                 const lastPart = slugParts[slugParts.length - 1];
                 if (!isNaN(Number(lastPart))) {
                     extractedAnimeSlug = slugParts.slice(0, -1).join("-");
+                    if (extractedAnimeSlug.endsWith("-episode")) {
+                        extractedAnimeSlug = extractedAnimeSlug.replace(/-episode$/, "");
+                    }
                 }
             }
             
@@ -62,11 +65,15 @@ export default function WatchPage({
   }, [params]);
 
   useEffect(() => {
-    if (animeTitle && animePoster && animeSlug && episode) {
+    if (slug && episode && animeSlug) {
+      // Use fallback title if animeTitle is not loaded yet.
+      // E.g. "bucchigiri" -> "Bucchigiri"
+      const fallbackTitle = animeSlug.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      
       addToWatchHistory({
         animeSlug,
-        animeTitle,
-        animePoster,
+        animeTitle: animeTitle || fallbackTitle,
+        animePoster: animePoster || "",
         episodeSlug: slug,
         episodeTitle: episode.title || "Episode",
         progress: 0,
