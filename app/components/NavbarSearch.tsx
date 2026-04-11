@@ -148,7 +148,14 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
             ref={inputRef}
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setQuery(val);
+              // Auto-search precisely when 5 characters are typed
+              if (val.length === 5) {
+                handleSearch(val);
+              }
+            }}
             onKeyDown={handleKeyDown}
             placeholder="Search anime..."
             className="w-full bg-transparent text-xl md:text-2xl font-light text-white placeholder:text-periwinkle py-4 pl-4 pr-4 outline-none"
