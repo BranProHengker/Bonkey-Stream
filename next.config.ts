@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     // Enable Next.js image optimization (auto WebP/AVIF conversion, resizing)
     remotePatterns: [
         { protocol: 'https', hostname: 'cdn.myanimelist.net' },
+        { protocol: 'https', hostname: 'myanimelist.net' },
         { protocol: 'https', hostname: 'i.imgur.com' },
         { protocol: 'https', hostname: 'i.pinimg.com' },
         { protocol: 'https', hostname: 'github.com' },

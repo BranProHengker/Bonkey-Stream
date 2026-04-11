@@ -106,7 +106,7 @@ export const getHome = async (): Promise<{ status: string; data: AnimeResult[] }
             slug: anime.animeId,
             poster: anime.poster,
             episodes: anime.episodes,
-            releasedOn: anime.releasedOn,
+            releasedOn: translateTimeStr(anime.releasedOn),
             status: anime.status,
             score: anime.score,
             type: anime.type,
@@ -471,6 +471,75 @@ export const getOngoing = async (page = 1): Promise<{ status: string; data: Anim
     };
   } catch (error) {
     console.error("Error fetching ongoing:", error);
+    return null;
+  }
+}
+
+// Helper to translate Indonesian relative time to English
+const translateTimeStr = (timeStr: string) => {
+  if (!timeStr) return timeStr;
+  return timeStr
+    .toLowerCase()
+    .replace('yang lalu', 'ago')
+    .replace('detik', 'sec')
+    .replace('menit', 'min')
+    .replace('jam', 'hours')
+    .replace('hari', 'days')
+    .replace('minggu', 'weeks')
+    .replace('bulan', 'months')
+    .replace('tahun', 'years')
+    .replace(' 1 hours', ' 1 hour') // Fix plural grammar for 1
+    .replace(' 1 days', ' 1 day')
+    .replace(' 1 mins', ' 1 min')
+    .replace(/\b(\w)/g, (c) => c.toUpperCase()); // Capitalize words
+};
+
+// Recent / Latest Episode anime
+export const getRecent = async (page = 1): Promise<{ status: string; data: AnimeResult[]; pagination?: Pagination } | null> => {
+  try {
+    const res = await fetch(`${BASE_URL}/recent?page=${page}`, { next: { revalidate: 300 } });
+    if (!res.ok) throw new Error("Failed to fetch recent");
+    const json = await res.json();
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawList = json.data?.animeList || [];
+    
+    // Fetch real anime posters concurrently instead of using episode scene screenshots
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const enrichedData = await Promise.all(rawList.map(async (anime: any) => {
+        let realPoster = anime.poster;
+        try {
+            // Attempt to get the actual anime cover
+            const detailRes = await fetch(`${BASE_URL}/anime/${anime.animeId}`, { next: { revalidate: 3600 } });
+            if (detailRes.ok) {
+                const detailJson = await detailRes.json();
+                if (detailJson.data && detailJson.data.poster) {
+                    realPoster = detailJson.data.poster;
+                }
+            }
+        } catch (e) {
+            console.error(`Failed to fetch real poster for ${anime.animeId}`, e);
+        }
+
+        return {
+            title: anime.title,
+            slug: anime.animeId,
+            poster: realPoster, // The anime cover, not the episode scene
+            episodes: anime.episodes,
+            releasedOn: translateTimeStr(anime.releasedOn),
+            type: anime.type,
+            score: anime.score,
+            genreList: anime.genreList
+        };
+    }));
+
+    return {
+        status: json.status,
+        data: enrichedData,
+        pagination: json.pagination
+    };
+  } catch (error) {
+    console.error("Error fetching recent:", error);
     return null;
   }
 }

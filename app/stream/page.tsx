@@ -1,4 +1,4 @@
-import { searchAnime, getHome, AnimeResult, Pagination } from "@/app/services/animeApi";
+import { searchAnime, getRecent, AnimeResult, Pagination } from "@/app/services/animeApi";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
@@ -23,10 +23,11 @@ export default async function StreamPage({
          pagination = searchData.pagination;
     }
   } else {
-    const homeData = await getHome();
-    if (homeData && homeData.data) {
-        results = homeData.data;
-        pagination = undefined;
+    // getRecent supports pagination and returns 'episodes' and 'releasedOn' fields
+    const recentData = await getRecent(currentPage);
+    if (recentData && recentData.data) {
+        results = recentData.data;
+        pagination = recentData.pagination;
     }
   }
 
@@ -78,21 +79,26 @@ export default async function StreamPage({
                             
                             {/* Badge Overlay */}
                             <div className="absolute top-2 right-2 flex flex-col gap-1.5 items-end pointer-events-none">
-                                {(anime.status && anime.status !== 'Unknown') && (
+                                {anime.episodes && (
+                                    <span className="bg-indigo/90 backdrop-blur-xl text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg tracking-wider uppercase border border-white/20">
+                                        EP {anime.episodes}
+                                    </span>
+                                )}
+                                {(anime.status && anime.status !== 'Unknown') && !anime.episodes && (
                                     <span className="bg-white/10 backdrop-blur-xl text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg tracking-wider uppercase border border-white/10">
                                         {anime.status}
                                     </span>
                                 )}
                                 {anime.score && (
                                     <span className="bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg flex items-center gap-1 border border-white/10">
-                                        <span className="text-xs">★</span> {anime.score}
+                                        <span className="text-yellow-400 text-xs text-shadow-sm">★</span> {anime.score}
                                     </span>
                                 )}
                             </div>
                             
                             {/* Play Icon on Hover */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 backdrop-blur-[2px]">
-                                <div className="w-12 h-12 bg-white/10 border border-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-400 ease-out">
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
+                                <div className="w-12 h-12 bg-white/10 border border-white/20 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-400 ease-out">
                                     <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M8 5v14l11-7z" />
                                     </svg>
@@ -105,21 +111,21 @@ export default async function StreamPage({
                                 {anime.title}
                             </h3>
                             
-                            <div className="mt-auto space-y-2">
+                            <div className="mt-auto space-y-2.5">
                                 {anime.genreList && anime.genreList.length > 0 && (
                                     <div className="flex flex-wrap gap-1.5">
                                         {anime.genreList.slice(0, 2).map((g, i) => (
-                                            <span key={i} className="text-[10px] text-periwinkle/80 bg-black/40 px-2 py-0.5 rounded border border-white/5 truncate max-w-[80px]">
+                                            <span key={i} className="text-[9px] text-periwinkle/80 bg-white/5 px-2 py-0.5 rounded border border-white/5 truncate max-w-[80px]">
                                                 {g.title}
                                             </span>
                                         ))}
                                     </div>
                                 )}
                                 
-                                <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px] text-periwinkle/50">
+                                <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] uppercase font-semibold text-periwinkle/60 tracking-wide">
                                     <div className="flex items-center truncate">
-                                        <svg className="w-3 h-3 mr-1 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        <svg className="w-3.5 h-3.5 mr-1.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                         <span className="truncate">{anime.releasedOn || anime.type || "TV"}</span>
                                     </div>
