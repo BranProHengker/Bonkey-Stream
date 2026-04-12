@@ -138,42 +138,75 @@ export default async function StreamPage({
 
                 {/* Pagination Controls */}
                 {pagination && (
-                    <div className="flex flex-col sm:flex-row justify-center items-center mt-16 gap-4 animate-fade-in-up delay-200">
-                        <Link 
-                            href={pagination.hasPrevPage ? `/stream?${q ? `q=${q}&` : ''}page=${pagination.prevPage}` : '#'}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 w-full sm:w-auto justify-center ${
-                                pagination.hasPrevPage 
-                                ? "bg-bg-card hover:bg-white hover:text-bg-dark text-white border border-white/5 hover:border-white" 
-                                : "bg-bg-card text-periwinkle/30 cursor-not-allowed border border-white/5"
-                            }`}
-                            aria-disabled={!pagination.hasPrevPage}
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Previous
-                        </Link>
-                        
-                        <span className="text-periwinkle text-sm font-medium bg-bg-card px-6 py-3 rounded-xl border border-white/5 flex items-center gap-2">
-                            <span className="text-white font-bold">Page {pagination.currentPage}</span>
-                            <span className="w-1 h-1 bg-white/20 rounded-full"></span>
-                            <span>{pagination.totalPages}</span>
-                        </span>
+                    <div className="flex justify-center items-center mt-16 pb-8 animate-fade-in-up delay-200">
+                        <div className="flex items-center gap-1 md:gap-2 p-1.5 bg-white/5 rounded-full border border-white/5 shadow-lg drop-shadow-sm">
+                            <Link 
+                                href={pagination.hasPrevPage ? `/stream?${q ? `q=${q}&` : ''}page=${pagination.prevPage}` : '#'}
+                                className={`flex items-center gap-1 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
+                                    pagination.hasPrevPage 
+                                    ? "bg-white hover:bg-slate-200 text-bg-dark shadow-sm" 
+                                    : "bg-white/5 text-periwinkle/30 cursor-not-allowed"
+                                }`}
+                                aria-disabled={!pagination.hasPrevPage}
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Prev
+                            </Link>
+                            
+                            <div className="flex items-center px-1 sm:px-2 gap-0.5 sm:gap-1 md:gap-2">
+                                {(() => {
+                                    const { currentPage, totalPages } = pagination;
+                                    const pages = [];
+                                    
+                                    if (totalPages <= 4) {
+                                        for (let i = 1; i <= totalPages; i++) pages.push(i);
+                                    } else {
+                                        if (currentPage <= 2) {
+                                            pages.push(1, 2, 3, '...', totalPages);
+                                        } else if (currentPage >= totalPages - 1) {
+                                            pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+                                        } else {
+                                            pages.push(1, '...', currentPage, '...', totalPages);
+                                        }
+                                    }
 
-                        <Link 
-                            href={pagination.hasNextPage ? `/stream?${q ? `q=${q}&` : ''}page=${pagination.nextPage}` : '#'}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 w-full sm:w-auto justify-center ${
-                                pagination.hasNextPage
-                                ? "bg-bg-card hover:bg-white hover:text-bg-dark text-white border border-white/5 hover:border-white"
-                                : "bg-bg-card text-periwinkle/30 cursor-not-allowed border border-white/5"
-                            }`}
-                            aria-disabled={!pagination.hasNextPage}
-                        >
-                            Next
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </Link>
+                                    return pages.map((p, i) => (
+                                        p === '...' ? (
+                                            <span key={`dots-${i}`} className="px-0.5 sm:px-2 text-white/50 text-xs sm:text-sm">...</span>
+                                        ) : (
+                                            <Link
+                                                key={`page-${p}`}
+                                                href={`/stream?${q ? `q=${q}&` : ''}page=${p}`}
+                                                className={`w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full text-xs sm:text-sm font-bold transition-all ${
+                                                    currentPage === p
+                                                    ? "bg-bg-dark text-white ring-1 ring-white/20 shadow-md"
+                                                    : "text-white/60 hover:bg-white/10 hover:text-white"
+                                                }`}
+                                            >
+                                                {p}
+                                            </Link>
+                                        )
+                                    ));
+                                })()}
+                            </div>
+
+                            <Link 
+                                href={pagination.hasNextPage ? `/stream?${q ? `q=${q}&` : ''}page=${pagination.nextPage}` : '#'}
+                                className={`flex items-center gap-1 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
+                                    pagination.hasNextPage
+                                    ? "bg-white hover:bg-slate-200 text-bg-dark shadow-sm"
+                                    : "bg-white/5 text-periwinkle/30 cursor-not-allowed"
+                                }`}
+                                aria-disabled={!pagination.hasNextPage}
+                            >
+                                Next
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </Link>
+                        </div>
                     </div>
                 )}
             </>
