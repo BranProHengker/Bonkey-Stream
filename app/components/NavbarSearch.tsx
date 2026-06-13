@@ -121,12 +121,16 @@ export default function NavbarSearch({ onClose }: NavbarSearchProps) {
   const triggerButton = (
     <button
       onClick={() => setIsOpen(true)}
-      className="p-2 rounded-full hover:bg-slate/50 transition-colors text-periwinkle hover:text-white"
+      className="group flex items-center gap-2 p-2 md:py-1.5 md:pl-2.5 md:pr-1.5 rounded-full md:rounded-lg md:border md:border-white/10 md:bg-white/5 hover:bg-white/10 transition-all text-periwinkle hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo/50"
       aria-label="Open Search"
     >
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 md:w-4 md:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
+      <span className="hidden md:flex items-center gap-1 text-[10px] font-mono tracking-widest text-periwinkle/50 group-hover:text-periwinkle/80 transition-colors bg-black/20 px-1.5 py-0.5 rounded ml-1">
+        <span>CTRL</span>
+        <span>K</span>
+      </span>
     </button>
   )
 

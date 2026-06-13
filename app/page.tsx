@@ -49,7 +49,6 @@ export default function RootPage() {
     fetchRecommendedAnime()
   }, [])
 
-  if (isLoading) return <LoadingPage />
   if (error) {
     return (
       <div className="min-h-screen bg-bg-dark text-white flex items-center justify-center">
@@ -57,7 +56,6 @@ export default function RootPage() {
       </div>
     )
   }
-
   return (
     <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
       <Navbar />
@@ -122,13 +120,27 @@ export default function RootPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-2">
-            {recommendedAnime.map((anime, index) => (
-              <div key={anime.mal_id} style={{ animationDelay: `${index * 100}ms` }} className="animate-fade-in-up">
-                <AnimeCard anime={anime} onClick={setSelectedAnime} />
-              </div>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-2">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="flex flex-col gap-3">
+                  <div className="w-full aspect-[2/3] bg-white/5 rounded-xl animate-pulse"></div>
+                  <div className="flex flex-col gap-2 px-1">
+                    <div className="w-[85%] h-4 bg-white/5 rounded animate-pulse"></div>
+                    <div className="w-[50%] h-3 bg-white/5 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-2">
+              {recommendedAnime.map((anime, index) => (
+                <div key={anime.mal_id} style={{ animationDelay: `${index * 100}ms` }} className="animate-fade-in-up">
+                  <AnimeCard anime={anime} onClick={setSelectedAnime} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

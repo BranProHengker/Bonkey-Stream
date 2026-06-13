@@ -4,7 +4,6 @@ import { getEpisode, EpisodeDetail, SANKA_HOST } from "@/app/services/animeApi";
 import { getAnimeDetail } from "@/app/services/animeApi";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-import LoadingPage from "@/app/components/LoadingPage";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
@@ -23,6 +22,7 @@ export default function WatchPage({
   const [animePoster, setAnimePoster] = useState<string>("");
   const [animeSlug, setAnimeSlug] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [theaterMode, setTheaterMode] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -215,6 +215,15 @@ export default function WatchPage({
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-indigo/10 rounded-full blur-[100px]"></div>
       </div>
 
+      {/* Theater Mode Overlay */}
+      {theaterMode && (
+        <div 
+          className="fixed inset-0 bg-black/95 z-40 transition-opacity duration-700 backdrop-blur-sm cursor-pointer"
+          onClick={() => setTheaterMode(false)}
+          title="Klik di mana saja untuk menyalakan lampu"
+        />
+      )}
+
       <div className="relative container mx-auto px-4 py-24 max-w-7xl">
         {/* Back button */}
         <div className="mb-6">
@@ -237,7 +246,28 @@ export default function WatchPage({
             </h1>
             
             {/* Episode Navigation */}
-            <div className="flex gap-3 w-full lg:w-auto">
+            <div className={`flex flex-wrap gap-2 sm:gap-3 w-full lg:w-auto ${theaterMode ? "z-50" : ""}`}>
+              {/* Theater Mode Toggle */}
+              <button
+                onClick={() => setTheaterMode(!theaterMode)}
+                className={`flex-none w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center transition-all shadow-[0_0_15px_rgba(0,0,0,0.5)] ${
+                  theaterMode 
+                    ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20" 
+                    : "bg-bg-card hover:bg-white/10 text-periwinkle hover:text-yellow-400 border border-white/5"
+                }`}
+                title={theaterMode ? "Nyalakan Lampu" : "Matikan Lampu"}
+              >
+                {theaterMode ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 17h2v1h-2v-1zm4.836-10.836l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414-1.414zM12 2a1 1 0 011 1v1a1 1 0 01-2 0V3a1 1 0 011-1zm6 9a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm-13 0a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm1.45-6.121a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zM15.828 17.5a4 4 0 11-7.656 0h7.656z" />
+                  </svg>
+                )}
+              </button>
+
               {episode.prev_episode ? (
                 <Link 
                   href={`/stream/watch/${episode.prev_episode.slug}`}
@@ -285,11 +315,14 @@ export default function WatchPage({
           </div>
 
           {/* Video Player */}
-          <div className="relative group">
+          <div className={`relative group ${theaterMode ? "z-50 shadow-[0_0_100px_rgba(0,0,0,1)] ring-1 ring-white/10 rounded-2xl" : ""}`}>
             <div className="absolute -inset-1 bg-gradient-to-r from-white/10 to-indigo/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             <div className="relative aspect-video w-full bg-black rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-white/10">
               {loading ? (
-                <LoadingPage />
+                <div className="w-full h-full flex flex-col items-center justify-center bg-black/50 text-white/50 space-y-4">
+                  <div className="w-10 h-10 border-4 border-indigo/30 border-t-indigo rounded-full animate-spin"></div>
+                  <span className="text-sm font-medium tracking-widest animate-pulse">LOADING VIDEO...</span>
+                </div>
               ) : currentServer ? (
                 currentServer.includes('.mp4') ? (
                   <video 

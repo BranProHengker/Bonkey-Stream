@@ -37,11 +37,7 @@ export default function UpcomingPage() {
 
   useEffect(() => {
     fetchUpcomingAnime()
-    const timer = setTimeout(() => setIsLoading(false), 1500)
-    return () => clearTimeout(timer)
   }, [])
-
-  if (isLoading) return <LoadingPage />
 
   return (
     <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
@@ -91,8 +87,14 @@ export default function UpcomingPage() {
 
         {loadingUpcoming ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-bg-card rounded-xl aspect-[2/3] border border-white/5 animate-pulse" />
+            {[...Array(10)].map((_, i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <div className="w-full aspect-[2/3] bg-white/5 rounded-xl animate-pulse"></div>
+                <div className="flex flex-col gap-2 px-1">
+                  <div className="w-[85%] h-4 bg-white/5 rounded animate-pulse"></div>
+                  <div className="w-[50%] h-3 bg-white/5 rounded animate-pulse"></div>
+                </div>
+              </div>
             ))}
           </div>
         ) : upcomingAnime.length > 0 ? (

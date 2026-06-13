@@ -5,6 +5,36 @@ import AnimeActions from "@/app/components/AnimeActions";
 import Image from "next/image";
 import Link from "next/link";
 
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const detailData = await getAnimeDetail(slug);
+  const anime = detailData?.data;
+
+  if (!anime) {
+    return {
+      title: 'Anime Not Found',
+    };
+  }
+
+  return {
+    title: anime.title,
+    description: anime.synopsis || `Nonton anime ${anime.title} subtitle Indonesia secara gratis di Bonkey Stream.`,
+    openGraph: {
+      title: anime.title,
+      description: anime.synopsis || `Nonton anime ${anime.title} subtitle Indonesia secara gratis di Bonkey Stream.`,
+      images: anime.poster ? [{ url: anime.poster }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: anime.title,
+      description: anime.synopsis || `Nonton anime ${anime.title} subtitle Indonesia secara gratis di Bonkey Stream.`,
+      images: anime.poster ? [anime.poster] : [],
+    },
+  };
+}
+
 export default async function StreamDetailPage({
   params,
 }: {

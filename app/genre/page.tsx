@@ -64,23 +64,15 @@ export default function GenrePage() {
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1500)
-    return () => clearTimeout(timer)
-  }, [])
-
-  useEffect(() => {
-    if (!isLoading && !genreAnime[selectedGenre]) {
+    if (!genreAnime[selectedGenre]) {
       fetchAnimeByGenre(selectedGenre, genres[selectedGenre])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, selectedGenre]) 
+  }, [selectedGenre]) 
 
   const handleGenreChange = (genreName: GenreKey) => {
     setSelectedGenre(genreName)
   }
-
-  if (isLoading) return <LoadingPage />
-
   return (
     <div className="min-h-screen bg-bg-dark text-white selection:bg-indigo/80 selection:text-white">
       <Navbar />
@@ -138,9 +130,13 @@ export default function GenrePage() {
 
           {isLoadingData ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-bg-card rounded-xl aspect-[2/3] border border-white/5 animate-pulse flex items-center justify-center">
-                   <div className="w-8 h-8 rounded-full border-2 border-indigo border-t-transparent animate-spin opacity-50"></div>
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="flex flex-col gap-3">
+                  <div className="w-full aspect-[2/3] bg-white/5 rounded-xl animate-pulse"></div>
+                  <div className="flex flex-col gap-2 px-1">
+                    <div className="w-[85%] h-4 bg-white/5 rounded animate-pulse"></div>
+                    <div className="w-[50%] h-3 bg-white/5 rounded animate-pulse"></div>
+                  </div>
                 </div>
               ))}
             </div>
