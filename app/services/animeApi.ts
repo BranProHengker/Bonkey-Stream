@@ -1,4 +1,5 @@
-export const BASE_URL = "https://www.sankavollerei.com/anime/samehadaku";
+export const SANKA_HOST = typeof window === 'undefined' ? "https://www.sankavollerei.com" : "/api/sanka-proxy";
+export const BASE_URL = `${SANKA_HOST}/anime/samehadaku`;
 
 export interface AnimeResult {
   title: string;
@@ -148,7 +149,7 @@ export const searchAnime = async (query: string, page = 1): Promise<{ status: st
     // Fallback to Kuramanime if Samehadaku fails or returns empty
     // Note: Kuramanime might not support pagination in the same way, or we just fetch page 1 for fallback
     if (page === 1) {
-        const kuraRes = await fetch(`https://www.sankavollerei.com/anime/kura/search/${encodeURIComponent(query)}`, { next: { revalidate: 600 } }); // 10min cache
+        const kuraRes = await fetch(`${SANKA_HOST}/anime/kura/search/${encodeURIComponent(query)}`, { next: { revalidate: 600 } }); // 10min cache
         if (kuraRes.ok) {
             const kuraJson = await kuraRes.json();
             if (kuraJson.results && kuraJson.results.length > 0) {
@@ -198,7 +199,7 @@ export const getAnimeDetail = async (slug: string): Promise<{ status: string; da
         if (match) {
             const id = match[1];
             const realSlug = match[2];
-            url = `https://www.sankavollerei.com/anime/kura/anime/${id}/${realSlug}`;
+            url = `${SANKA_HOST}/anime/kura/anime/${id}/${realSlug}`;
         } else {
              throw new Error("Invalid Kuramanime slug format");
         }
@@ -322,7 +323,7 @@ export const getEpisode = async (slug: string): Promise<{ status: string; data: 
             const id = parts[1];
             const episode = parts[parts.length - 1];
             const realSlug = parts.slice(2, parts.length - 1).join('-');
-            url = `https://www.sankavollerei.com/anime/kura/watch/${id}/${realSlug}/${episode}`;
+            url = `${SANKA_HOST}/anime/kura/watch/${id}/${realSlug}/${episode}`;
         } else {
              // Fallback or error
              console.error("Invalid Kuramanime episode slug:", slug);

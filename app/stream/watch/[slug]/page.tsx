@@ -1,6 +1,6 @@
 "use client"
 
-import { getEpisode, EpisodeDetail } from "@/app/services/animeApi";
+import { getEpisode, EpisodeDetail, SANKA_HOST } from "@/app/services/animeApi";
 import { getAnimeDetail } from "@/app/services/animeApi";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -122,7 +122,7 @@ export default function WatchPage({
 
       setLoading(true);
       try {
-          const res = await fetch(`https://www.sankavollerei.com/anime/samehadaku/server/${serverId}`);
+          const res = await fetch(`${SANKA_HOST}/anime/samehadaku/server/${serverId}`);
           const data = await res.json();
           if (data.data?.url) {
               setCurrentServer(data.data.url);
